@@ -1,0 +1,58 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<Version>0.9.0-beta</Version>
+		<RootNamespace>ToolBX.$(AssemblyName)</RootNamespace>
+		<PackageId>ToolBX.$(AssemblyName)</PackageId>
+		<Product>ToolBX.$(AssemblyName)</Product>
+		<Authors>Mathieu Moreault</Authors>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<RepositoryUrl>https://github.com/Moreault/DML.NET</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/Moreault/DML.NET</PackageProjectUrl>
+		<Description>.NET implementation of the Dialog Markup Language.</Description>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageIcon>dmlnet.png</PackageIcon>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Include="..\dmlnet.png">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	  <None Include="..\README.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="ToolBX.AwesomeMarkup" Version="0.9.0-beta" />
+	  <PackageReference Include="ToolBX.ColorFull" Version="1.0.0" />
+	  <PackageReference Include="ToolBX.EasyTypeParsing" Version="1.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+			<_Parameter1>DML.NET.Tests</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Resources\Exceptions.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Exceptions.resx</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Update="Resources\Exceptions.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>Exceptions.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	</ItemGroup>
+
+</Project>

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DML.NET", "DML.NET\DML.NET.csproj", "{9959A4C0-6F72-4D4C-B601-986A757D699D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DML.NET.Tests", "DML.NET.Tests\DML.NET.Tests.csproj", "{3C35DB4E-532F-4EF2-981F-E30B3AC2892D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9959A4C0-6F72-4D4C-B601-986A757D699D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9959A4C0-6F72-4D4C-B601-986A757D699D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9959A4C0-6F72-4D4C-B601-986A757D699D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9959A4C0-6F72-4D4C-B601-986A757D699D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C35DB4E-532F-4EF2-981F-E30B3AC2892D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C35DB4E-532F-4EF2-981F-E30B3AC2892D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C35DB4E-532F-4EF2-981F-E30B3AC2892D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C35DB4E-532F-4EF2-981F-E30B3AC2892D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {80621B97-C455-47D2-B454-13F53258573B}
+	EndGlobalSection
+EndGlobal
