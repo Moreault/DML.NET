@@ -68,5 +68,14 @@ namespace DML.NET.Sample.Resources {
                 return ResourceManager.GetString("EnterText", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error : {0}.
+        /// </summary>
+        internal static string Error {
+            get {
+                return ResourceManager.GetString("Error", resourceCulture);
+            }
+        }
     }
 }

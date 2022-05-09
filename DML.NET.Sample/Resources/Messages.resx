@@ -120,4 +120,7 @@
   <data name="EnterText" xml:space="preserve">
     <value>Enter text containing DML tags (ex : This &lt;bold&gt;is&lt;/bold&gt; some texty text)</value>
   </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error : {0}</value>
+  </data>
 </root>

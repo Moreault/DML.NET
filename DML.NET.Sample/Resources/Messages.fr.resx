@@ -120,4 +120,7 @@
   <data name="EnterText" xml:space="preserve">
     <value>Entrez du texte qui contient des balises DML (ex : Sébastien s'est sauvé avec ma &lt;bold&gt;grand-mère&lt;/bold&gt;)</value>
   </data>
+  <data name="Error" xml:space="preserve">
+    <value>Erreur : {0}</value>
+  </data>
 </root>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using DML.NET.Sample.Resources;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
@@ -23,7 +24,7 @@ namespace DML.NET.Sample
 
             while(true)
             {
-                Console.WriteLine("Enter text containing DML tags (ex : This <bold>is</bold> some texty text)");
+                Console.WriteLine(Messages.EnterText);
                 try
                 {
                     var line = Console.ReadLine();
@@ -32,7 +33,7 @@ namespace DML.NET.Sample
                 }
                 catch (Exception exception)
                 {
-                    Console.WriteLine($"Error : {exception.Message}");
+                    Console.WriteLine(Messages.Error, exception.Message);
                 }
             }
         }
