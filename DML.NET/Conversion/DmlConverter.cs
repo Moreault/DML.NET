@@ -28,7 +28,7 @@ public class DmlConverter : IDmlConverter
     {
         if (metaString == null) throw new ArgumentNullException(nameof(metaString));
 
-        var colorTag = metaString.Tags.SingleOrDefault(x => string.Equals(x.Name, DmlTags.Color, StringComparison.InvariantCultureIgnoreCase));
+        var colorTag = metaString.Tags.LastOrDefault(x => string.Equals(x.Name, DmlTags.Color, StringComparison.InvariantCultureIgnoreCase));
         
         return new DmlSubstring
         {

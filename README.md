@@ -42,6 +42,9 @@ public void YourMethod()
 
 You can always assume that a null or empty value for properties such as Color or Styles mean that this part of text should use default values.
 
+### Sample project
+You can use the sample project provided in the solution to test out your use cases with DML to see if they apply correctly. 
+
 ## Supported tags
 
 Currently, DML only supports the following tags : 
@@ -61,6 +64,22 @@ var dml = "<color red='59'>This</color> is <color blue="95">weird</color>.";
 //the following is allowed because DML accepts quoteless attributes and does not require the entire string to be quoteless- only that the quote style is consistent
 var dml = "<color red=59>This</color> is not as <color blue="95">weird</color>.";
 ```
+
+Nested color tags are supported. The inner tag will always take precedence over the outer tags.
+
+```c#
+//The whole string is green except for the word "grandma" which is red
+var text = "<color green=255>Sebastian eloped with my <color red=255>grandma</color>.</color>"
+```
+
+The outer color tag is effectively ignored. In the case of nested text styles, however, they are both used.
+
+```c#
+//The word "quite" is bold while "clear" is both bold and italic
+var text = "Sebastian's intentions are <bold>quite <italic>clear</italic></bold>."
+```
+
+Of course, the above will only be true if your output even supports bold-italic text. If not, then it would be up to you to decide which one takes precedence.
 
 More support is coming for animations at a later date once proper standards (tag names, properties, animation types, etc...) have been defined.
 

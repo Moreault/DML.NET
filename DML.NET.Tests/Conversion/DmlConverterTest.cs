@@ -74,20 +74,27 @@ public class DmlConverterTest
         }
 
         [TestMethod]
-        public void WhenMetaStringsHaveMoreThanOneColorTag_ReturnTextOnly()
+        public void WhenMetaStringHasColorTagNestedInsideAnotherColorTag_UseLastColorTag()
         {
             //Arrange
             var metaStrings = new List<MetaString>(Fixture.Build<MetaString>().With(x => x.Tags, new List<MarkupTag>
             {
-                new MarkupTag { Name = DmlTags.Color },
-                new MarkupTag { Name = DmlTags.Color },
+                new MarkupTag { Name = DmlTags.Color, Value = "First"},
+                new MarkupTag { Name = DmlTags.Color, Value = "Second" },
             }).CreateMany());
 
+            var expectedColor = Fixture.Create<Color>();
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(new MarkupTag{Name = DmlTags.Color, Value = "Second"})).Returns(expectedColor);
+
             //Act
-            Action action = () => Instance.Convert(metaStrings);
+            var result = Instance.Convert(metaStrings);
 
             //Assert
-            action.Should().Throw<InvalidOperationException>();
+            result.Should().BeEquivalentTo(metaStrings.Select(x => new DmlSubstring
+            {
+                Text = x.Text,
+                Color = expectedColor
+            }));
         }
 
         [TestMethod]
@@ -126,7 +133,6 @@ public class DmlConverterTest
             GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaStrings[0].Tags.Single())).Returns(colors[0]);
             GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaStrings[1].Tags.Single())).Returns(colors[1]);
             GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaStrings[2].Tags.Single())).Returns(colors[2]);
-
 
             //Act
             var result = Instance.Convert(metaStrings);
@@ -201,7 +207,7 @@ public class DmlConverterTest
         }
 
         [TestMethod]
-        public void WhenThereIsMoreThanOneColorTag_Throw()
+        public void WhenMetaStringHasColorTagNestedInsideAnotherColorTag_UseLastColorTag()
         {
             //Arrange
             var metaString = new MetaString
@@ -209,16 +215,23 @@ public class DmlConverterTest
                 Text = Fixture.Create<string>(),
                 Tags = new List<MarkupTag>
                 {
-                    new MarkupTag { Name = DmlTags.Color },
-                    new MarkupTag { Name = DmlTags.Color },
+                    new MarkupTag { Name = DmlTags.Color, Value = "First" },
+                    new MarkupTag { Name = DmlTags.Color, Value = "Second" },
                 }
             };
 
+            var expectedColor = Fixture.Create<Color>();
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(new MarkupTag { Name = DmlTags.Color, Value = "Second" })).Returns(expectedColor);
+
             //Act
-            Action action = () => Instance.Convert(metaString);
+            var result = Instance.Convert(metaString);
 
             //Assert
-            action.Should().Throw<InvalidOperationException>();
+            result.Should().BeEquivalentTo(new DmlSubstring
+            {
+                Text = metaString.Text,
+                Color = expectedColor
+            });
         }
 
         [TestMethod]

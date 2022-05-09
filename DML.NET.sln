@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DML.NET", "DML.NET\DML.NET.csproj", "{9959A4C0-6F72-4D4C-B601-986A757D699D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DML.NET", "DML.NET\DML.NET.csproj", "{9959A4C0-6F72-4D4C-B601-986A757D699D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DML.NET.Tests", "DML.NET.Tests\DML.NET.Tests.csproj", "{3C35DB4E-532F-4EF2-981F-E30B3AC2892D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DML.NET.Tests", "DML.NET.Tests\DML.NET.Tests.csproj", "{3C35DB4E-532F-4EF2-981F-E30B3AC2892D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DML.NET.Sample", "DML.NET.Sample\DML.NET.Sample.csproj", "{4C01E574-72C2-4CFF-A09E-1A2D21E95682}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{3C35DB4E-532F-4EF2-981F-E30B3AC2892D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C35DB4E-532F-4EF2-981F-E30B3AC2892D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C35DB4E-532F-4EF2-981F-E30B3AC2892D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C01E574-72C2-4CFF-A09E-1A2D21E95682}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C01E574-72C2-4CFF-A09E-1A2D21E95682}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C01E574-72C2-4CFF-A09E-1A2D21E95682}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C01E574-72C2-4CFF-A09E-1A2D21E95682}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
