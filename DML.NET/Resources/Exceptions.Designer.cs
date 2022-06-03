@@ -63,6 +63,15 @@ namespace ToolBX.DML.NET.Resources {
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
+        internal static string CannotConvertBecauseTagUnsupported {
+            get {
+                return ResourceManager.GetString("CannotConvertBecauseTagUnsupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Can&apos;t deserialize DML : &apos;{0}&apos; contains multiple &apos;{1}&apos; tags.
+        /// </summary>
         internal static string CannotDeserializeDmlBecauseDuplicateTextStyle {
             get {
                 return ResourceManager.GetString("CannotDeserializeDmlBecauseDuplicateTextStyle", resourceCulture);

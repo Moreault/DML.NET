@@ -29,11 +29,13 @@ public class DmlConverter : IDmlConverter
         if (metaString == null) throw new ArgumentNullException(nameof(metaString));
 
         var colorTag = metaString.Tags.LastOrDefault(x => string.Equals(x.Name, DmlTags.Color, StringComparison.InvariantCultureIgnoreCase));
-        
+        var highlightTag = metaString.Tags.LastOrDefault(x => string.Equals(x.Name, DmlTags.Highlight, StringComparison.InvariantCultureIgnoreCase));
+
         return new DmlSubstring
         {
             Text = metaString.Text,
             Color = colorTag == null ? null : _dmlColorTagConverter.Convert(colorTag),
+            Highlight = highlightTag == null ? null : _dmlColorTagConverter.Convert(highlightTag),
             Styles = _dmlTextStyleConverter.Convert(metaString)
         };
     }

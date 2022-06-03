@@ -6,6 +6,7 @@ public record DmlSubstringEntry
 
     public string Text => _substring.Text;
     public Color? Color => _substring.Color;
+    public Color? Highlight => _substring.Highlight;
     public int Length => _substring.Length;
     public IReadOnlyList<TextStyle> Styles => _substring.Styles;
 

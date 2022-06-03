@@ -49,6 +49,7 @@ You can use the sample project provided in the solution to test out your use cas
 
 Currently, DML only supports the following tags : 
 * Color (both HTML-style hex and RGB- obviously not in the same tag)
+* Highlight (sometimes also known as background color, its syntax is the same as the color's)
 * Bold
 * Italic
 * Underline
@@ -77,6 +78,14 @@ The outer color tag is effectively ignored. In the case of nested text styles, h
 ```c#
 //The word "quite" is bold while "clear" is both bold and italic
 var text = "Sebastian's intentions are <bold>quite <italic>clear</italic></bold>."
+```
+
+```c#
+//Everything between the "highlight" tags should have its background color changed to pinkish purple
+//The main color tag (255, 255, 255) sets the highlit text to white
+//Sebastian and grandma should apear green
+//This all probably isn't very on the eyes
+var text = "I cannot emphasize this enough; <highlight red=255 blue=255><color red=255 green=255 blue=255>leaving <color green=255>Sebastian</color> alone with your <color green=255>grandma</color> is a terrible idea</color></highlight>."
 ```
 
 Of course, the above will only be true if your output even supports bold-italic text. If not, then it would be up to you to decide which one takes precedence.

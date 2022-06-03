@@ -105,7 +105,7 @@ public class DmlString : IReadOnlyList<DmlSubstringEntry>, IEquatable<DmlString>
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
-        return _items == null && other._items == null || _items != null && other._items != null && _items.SequenceEqual(other._items);
+        return _items.SequenceEqual(other._items);
     }
 
     public override bool Equals(object? obj)
@@ -118,12 +118,12 @@ public class DmlString : IReadOnlyList<DmlSubstringEntry>, IEquatable<DmlString>
 
     public override int GetHashCode()
     {
-        return (_items != null ? _items.GetHashCode() : 0);
+        return (_items.GetHashCode());
     }
 
-    public static bool operator ==(DmlString a, DmlString b) => a is null && b is null || a is not null && a.Equals(b);
+    public static bool operator ==(DmlString? a, DmlString? b) => a is null && b is null || a is not null && a.Equals(b);
 
-    public static bool operator !=(DmlString a, DmlString b) => !(a == b);
+    public static bool operator !=(DmlString? a, DmlString? b) => !(a == b);
 
     public override string ToString() => string.Join("", _items.Select(x => x.Text));
 }

@@ -1,6 +1,4 @@
-﻿using ToolBX.DML.NET.Resources;
-
-namespace DML.NET.Tests.Conversion;
+﻿namespace DML.NET.Tests.Conversion;
 
 [TestClass]
 public class DmlTextStyleConverterTester

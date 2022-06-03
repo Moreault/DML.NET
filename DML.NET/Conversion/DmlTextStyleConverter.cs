@@ -1,6 +1,4 @@
-﻿using ToolBX.DML.NET.Resources;
-
-namespace ToolBX.DML.NET.Conversion;
+﻿namespace ToolBX.DML.NET.Conversion;
 
 public interface IDmlTextStyleConverter
 {

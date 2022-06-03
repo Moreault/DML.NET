@@ -101,4 +101,7 @@
 	<data name="CannotDeserializeDmlBecauseDuplicateTextStyle" xml:space="preserve">
 		<value>Can't deserialize DML : '{0}' contains multiple '{1}' tags</value>
 	</data>
+	<data name="CannotConvertBecauseTagUnsupported" xml:space="preserve">
+		<value>Can't convert tag to color : its name must be '&lt;{0}&gt;' or &lt;{1}&gt; but it was '&lt;{2}&gt;'</value>
+	</data>
 </root>

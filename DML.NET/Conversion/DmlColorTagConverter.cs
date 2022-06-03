@@ -11,7 +11,8 @@ public class DmlColorTagConverter : IDmlColorTagConverter
     public Color Convert(MarkupTag tag)
     {
         if (tag == null) throw new ArgumentNullException(nameof(tag));
-        if (!string.Equals(tag.Name, DmlTags.Color, StringComparison.InvariantCultureIgnoreCase)) throw new Exception($"Can't convert {nameof(MarkupTag)} to {nameof(Color)} : '{tag}' must be named '{DmlTags.Color}'.");
+        if (!string.Equals(tag.Name, DmlTags.Color, StringComparison.InvariantCultureIgnoreCase) && !string.Equals(tag.Name, DmlTags.Highlight, StringComparison.InvariantCultureIgnoreCase)) 
+            throw new Exception(string.Format(Exceptions.CannotConvertBecauseTagUnsupported, DmlTags.Color, DmlTags.Highlight, tag));
 
         var colorAttributes = tag.Attributes.Where(x => string.Equals(x.Name, DmlTags.Red, StringComparison.InvariantCultureIgnoreCase) ||
                                                         string.Equals(x.Name, DmlTags.Green, StringComparison.InvariantCultureIgnoreCase) ||

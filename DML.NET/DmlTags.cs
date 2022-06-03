@@ -2,13 +2,14 @@
 
 internal static class DmlTags
 {
-    public static string Color = "color";
-    public static string Red = "red";
-    public static string Green = "green";
-    public static string Blue = "blue";
-    public static string Alpha = "alpha";
-    public static string Bold = "bold";
-    public static string Italic = "italic";
-    public static string Underline = "underline";
-    public static string Strikeout = "strikeout";
+    public const string Color = "color";
+    public const string Highlight = "highlight";
+    public const string Red = "red";
+    public const string Green = "green";
+    public const string Blue = "blue";
+    public const string Alpha = "alpha";
+    public const string Bold = "bold";
+    public const string Italic = "italic";
+    public const string Underline = "underline";
+    public const string Strikeout = "strikeout";
 }

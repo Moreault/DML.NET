@@ -20,7 +20,7 @@ public class DmlColorTagConverterTest
         }
 
         [TestMethod]
-        public void WhenTagIsNotNamedColor_Throw()
+        public void WhenTagIsNotNamedColorOrHighlight_Throw()
         {
             //Arrange
             var tag = Fixture.Create<MarkupTag>();
@@ -29,16 +29,18 @@ public class DmlColorTagConverterTest
             Action action = () => Instance.Convert(tag);
 
             //Assert
-            action.Should().Throw<Exception>().WithMessage($"Can't convert {nameof(MarkupTag)} to {nameof(Color)} : '{tag}' must be named '{DmlTags.Color}'.");
+            action.Should().Throw<Exception>().WithMessage(string.Format(Exceptions.CannotConvertBecauseTagUnsupported, DmlTags.Color, DmlTags.Highlight, tag));
         }
 
         [TestMethod]
-        public void WhenTagContainsNeitherValueNorColorAttributes_Throw()
+        [DataRow(DmlTags.Color)]
+        [DataRow(DmlTags.Highlight)]
+        public void WhenTagContainsNeitherValueNorColorAttributes_Throw(string colorTag)
         {
             //Arrange
             var tag = new MarkupTag
             {
-                Name = DmlTags.Color
+                Name = colorTag
             };
 
             //Act
@@ -47,12 +49,14 @@ public class DmlColorTagConverterTest
             //Assert
             action.Should().Throw<Exception>().WithMessage($"Can't convert {nameof(MarkupTag)} to {nameof(Color)} : tag '{tag}' does not appear to hold any valid color information");
         }
-
+        
         [TestMethod]
-        public void WhenTagContainsValueThatIsNotHexCode_Throw()
+        [DataRow(DmlTags.Color)]
+        [DataRow(DmlTags.Highlight)]
+        public void WhenTagContainsValueThatIsNotHexCode_Throw(string colorTag)
         {
             //Arrange
-            var tag = Fixture.Build<MarkupTag>().With(x => x.Name, DmlTags.Color).Create();
+            var tag = Fixture.Build<MarkupTag>().With(x => x.Name, colorTag).Create();
 
             //Act
             Action action = () => Instance.Convert(tag);
@@ -62,12 +66,14 @@ public class DmlColorTagConverterTest
         }
         //TODO add Fixture extension to create random hex color codes
         [TestMethod]
-        public void WhenTagHasBothHexCodeValueAndColorAttributes_Throw()
+        [DataRow(DmlTags.Color)]
+        [DataRow(DmlTags.Highlight)]
+        public void WhenTagHasBothHexCodeValueAndColorAttributes_Throw(string colorTag)
         {
             //Arrange
             var tag = new MarkupTag
             {
-                Name = DmlTags.Color,
+                Name = colorTag,
                 Value = "#FF3456",
                 Attributes = new List<MarkupParameter>
                 {
@@ -87,14 +93,16 @@ public class DmlColorTagConverterTest
         }
 
         [TestMethod]
-        public void WhenTagIsHexCode_ReturnAsRgba()
+        [DataRow(DmlTags.Color)]
+        [DataRow(DmlTags.Highlight)]
+        public void WhenTagIsHexCode_ReturnAsRgba(string colorTag)
         {
             //Arrange
             var hex = "#FF0000";
 
             var tag = new MarkupTag
             {
-                Name = DmlTags.Color,
+                Name = colorTag,
                 Value = hex,
             };
 
@@ -106,12 +114,14 @@ public class DmlColorTagConverterTest
         }
 
         [TestMethod]
-        public void WhenTagOnlyHasAttributesAndTheyContainNonNumeric_Throw()
+        [DataRow(DmlTags.Color)]
+        [DataRow(DmlTags.Highlight)]
+        public void WhenTagOnlyHasAttributesAndTheyContainNonNumeric_Throw(string colorTag)
         {
             //Arrange
             var tag = new MarkupTag
             {
-                Name = DmlTags.Color,
+                Name = colorTag,
                 Attributes = new List<MarkupParameter>
                 {
                     new() { Name = DmlTags.Red, Value = Fixture.Create<string>() },
@@ -129,12 +139,14 @@ public class DmlColorTagConverterTest
         }
 
         [TestMethod]
-        public void WhenTagOnlyHasAttributesAndTheyContainValuesBelowZero_Throw()
+        [DataRow(DmlTags.Color)]
+        [DataRow(DmlTags.Highlight)]
+        public void WhenTagOnlyHasAttributesAndTheyContainValuesBelowZero_Throw(string colorTag)
         {
             //Arrange
             var tag = new MarkupTag
             {
-                Name = DmlTags.Color,
+                Name = colorTag,
                 Attributes = new List<MarkupParameter>
                 {
                     new() { Name = DmlTags.Red, Value = Fixture.Create<byte>().ToString() },
@@ -152,12 +164,14 @@ public class DmlColorTagConverterTest
         }
 
         [TestMethod]
-        public void WhenTagOnlyHasAttributesAndTheyContainValuesOver255_Throw()
+        [DataRow(DmlTags.Color)]
+        [DataRow(DmlTags.Highlight)]
+        public void WhenTagOnlyHasAttributesAndTheyContainValuesOver255_Throw(string colorTag)
         {
             //Arrange
             var tag = new MarkupTag
             {
-                Name = DmlTags.Color,
+                Name = colorTag,
                 Attributes = new List<MarkupParameter>
                 {
                     new() { Name = DmlTags.Red, Value = Fixture.Create<byte>().ToString() },
@@ -175,14 +189,16 @@ public class DmlColorTagConverterTest
         }
 
         [TestMethod]
-        public void WhenTagIsFullRgba_Return()
+        [DataRow(DmlTags.Color)]
+        [DataRow(DmlTags.Highlight)]
+        public void WhenTagIsFullRgba_Return(string colorTag)
         {
             //Arrange
             var color = Fixture.Create<Color>();
 
             var tag = new MarkupTag
             {
-                Name = DmlTags.Color,
+                Name = colorTag,
                 Attributes = new List<MarkupParameter>
                 {
                     new() { Name = DmlTags.Red, Value = color.Red.ToString() },
@@ -200,14 +216,16 @@ public class DmlColorTagConverterTest
         }
 
         [TestMethod]
-        public void WhenTagIsRgbOnly_ReturnWithMaxAlpha()
+        [DataRow(DmlTags.Color)]
+        [DataRow(DmlTags.Highlight)]
+        public void WhenTagIsRgbOnly_ReturnWithMaxAlpha(string colorTag)
         {
             //Arrange
             var color = new Color(Fixture.Create<byte>(), Fixture.Create<byte>(), Fixture.Create<byte>());
 
             var tag = new MarkupTag
             {
-                Name = DmlTags.Color,
+                Name = colorTag,
                 Attributes = new List<MarkupParameter>
                 {
                     new() { Name = DmlTags.Red, Value = color.Red.ToString() },
@@ -224,14 +242,16 @@ public class DmlColorTagConverterTest
         }
 
         [TestMethod]
-        public void WhenTagIsRedOnly_ReturnRed()
+        [DataRow(DmlTags.Color)]
+        [DataRow(DmlTags.Highlight)]
+        public void WhenTagIsRedOnly_ReturnRed(string colorTag)
         {
             //Arrange
             var red = Fixture.Create<byte>();
 
             var tag = new MarkupTag
             {
-                Name = DmlTags.Color,
+                Name = colorTag,
                 Attributes = new List<MarkupParameter>
                 {
                     new() { Name = DmlTags.Red, Value = red.ToString() },
@@ -246,14 +266,16 @@ public class DmlColorTagConverterTest
         }
 
         [TestMethod]
-        public void WhenTagIsGreenOnly_ReturnGreen()
+        [DataRow(DmlTags.Color)]
+        [DataRow(DmlTags.Highlight)]
+        public void WhenTagIsGreenOnly_ReturnGreen(string colorTag)
         {
             //Arrange
             var green = Fixture.Create<byte>();
 
             var tag = new MarkupTag
             {
-                Name = DmlTags.Color,
+                Name = colorTag,
                 Attributes = new List<MarkupParameter>
                 {
                     new() { Name = DmlTags.Green, Value = green.ToString() },
@@ -268,14 +290,16 @@ public class DmlColorTagConverterTest
         }
 
         [TestMethod]
-        public void WhenTagIsBlueOnly_ReturnBlue()
+        [DataRow(DmlTags.Color)]
+        [DataRow(DmlTags.Highlight)]
+        public void WhenTagIsBlueOnly_ReturnBlue(string colorTag)
         {
             //Arrange
             var blue = Fixture.Create<byte>();
 
             var tag = new MarkupTag
             {
-                Name = DmlTags.Color,
+                Name = colorTag,
                 Attributes = new List<MarkupParameter>
                 {
                     new() { Name = DmlTags.Blue, Value = blue.ToString() },
@@ -290,14 +314,16 @@ public class DmlColorTagConverterTest
         }
 
         [TestMethod]
-        public void WhenTagIsAlphaOnly_ReturnWhite()
+        [DataRow(DmlTags.Color)]
+        [DataRow(DmlTags.Highlight)]
+        public void WhenTagIsAlphaOnly_ReturnWhite(string colorTag)
         {
             //Arrange
             var alpha = Fixture.Create<byte>();
 
             var tag = new MarkupTag
             {
-                Name = DmlTags.Color,
+                Name = colorTag,
                 Attributes = new List<MarkupParameter>
                 {
                     new() { Name = DmlTags.Alpha, Value = alpha.ToString() },
