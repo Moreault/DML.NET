@@ -1,4 +1,6 @@
-﻿namespace DML.NET.Tests.Conversion;
+﻿using ToolBX.AwesomeMarkup.Conversion;
+
+namespace DML.NET.Tests.Conversion;
 
 [TestClass]
 public class DmlTextStyleConverterTester
@@ -28,8 +30,8 @@ public class DmlTextStyleConverterTester
                 Text = "Something",
                 Tags = new List<MarkupTag>
                 {
-                    new() { Name = DmlTags.Bold },
-                    new() { Name = DmlTags.Bold },
+                    new() { Name = DmlTags.Bold, Kind = Fixture.Create<TagKind>() },
+                    new() { Name = DmlTags.Bold, Kind = Fixture.Create<TagKind>() },
                 }
             };
 
@@ -49,9 +51,9 @@ public class DmlTextStyleConverterTester
                 Text = "Something",
                 Tags = new List<MarkupTag>
                 {
-                    new() { Name = DmlTags.Bold },
-                    new() { Name = DmlTags.Italic },
-                    new() { Name = DmlTags.Italic },
+                    new() { Name = DmlTags.Bold, Kind = Fixture.Create<TagKind>() },
+                    new() { Name = DmlTags.Italic, Kind = Fixture.Create<TagKind>() },
+                    new() { Name = DmlTags.Italic, Kind = Fixture.Create<TagKind>() },
                 }
             };
 
@@ -71,10 +73,10 @@ public class DmlTextStyleConverterTester
                 Text = "Something",
                 Tags = new List<MarkupTag>
                 {
-                    new() { Name = DmlTags.Bold },
-                    new() { Name = DmlTags.Italic },
-                    new() { Name = DmlTags.Underline },
-                    new() { Name = DmlTags.Underline },
+                    new() { Name = DmlTags.Bold, Kind = Fixture.Create<TagKind>() },
+                    new() { Name = DmlTags.Italic, Kind = Fixture.Create<TagKind>() },
+                    new() { Name = DmlTags.Underline, Kind = Fixture.Create<TagKind>() },
+                    new() { Name = DmlTags.Underline, Kind = Fixture.Create<TagKind>() },
                 }
             };
 
@@ -94,11 +96,11 @@ public class DmlTextStyleConverterTester
                 Text = "Something",
                 Tags = new List<MarkupTag>
                 {
-                    new() { Name = DmlTags.Bold },
-                    new() { Name = DmlTags.Italic },
-                    new() { Name = DmlTags.Underline },
-                    new() { Name = DmlTags.Strikeout },
-                    new() { Name = DmlTags.Strikeout },
+                    new() { Name = DmlTags.Bold, Kind = Fixture.Create<TagKind>() },
+                    new() { Name = DmlTags.Italic, Kind = Fixture.Create<TagKind>() },
+                    new() { Name = DmlTags.Underline, Kind = Fixture.Create<TagKind>() },
+                    new() { Name = DmlTags.Strikeout, Kind = Fixture.Create<TagKind>() },
+                    new() { Name = DmlTags.Strikeout, Kind = Fixture.Create<TagKind>() },
                 }
             };
 
@@ -118,7 +120,7 @@ public class DmlTextStyleConverterTester
                 Text = "Something",
                 Tags = new List<MarkupTag>
                 {
-                    new() { Name = DmlTags.Bold },
+                    new() { Name = DmlTags.Bold, Kind = Fixture.Create<TagKind>() },
                 }
             };
 
@@ -138,7 +140,7 @@ public class DmlTextStyleConverterTester
                 Text = "Something",
                 Tags = new List<MarkupTag>
                 {
-                    new() { Name = DmlTags.Italic },
+                    new() { Name = DmlTags.Italic, Kind = Fixture.Create<TagKind>() },
                 }
             };
 
@@ -158,7 +160,7 @@ public class DmlTextStyleConverterTester
                 Text = "Something",
                 Tags = new List<MarkupTag>
                 {
-                    new() { Name = DmlTags.Underline },
+                    new() { Name = DmlTags.Underline, Kind = Fixture.Create<TagKind>() },
                 }
             };
 
@@ -178,7 +180,7 @@ public class DmlTextStyleConverterTester
                 Text = "Something",
                 Tags = new List<MarkupTag>
                 {
-                    new() { Name = DmlTags.Strikeout },
+                    new() { Name = DmlTags.Strikeout, Kind = Fixture.Create<TagKind>() },
                 }
             };
 
@@ -198,8 +200,8 @@ public class DmlTextStyleConverterTester
                 Text = "Something",
                 Tags = new List<MarkupTag>
                 {
-                    new() { Name = DmlTags.Bold },
-                    new() { Name = DmlTags.Italic },
+                    new() { Name = DmlTags.Bold, Kind = Fixture.Create<TagKind>() },
+                    new() { Name = DmlTags.Italic, Kind = Fixture.Create<TagKind>() },
                 }
             };
 
@@ -219,8 +221,8 @@ public class DmlTextStyleConverterTester
                 Text = "Something",
                 Tags = new List<MarkupTag>
                 {
-                    new() { Name = DmlTags.Strikeout },
-                    new() { Name = DmlTags.Underline },
+                    new() { Name = DmlTags.Strikeout, Kind = Fixture.Create<TagKind>() },
+                    new() { Name = DmlTags.Underline, Kind = Fixture.Create<TagKind>() },
                 }
             };
 
@@ -240,10 +242,10 @@ public class DmlTextStyleConverterTester
                 Text = "Something",
                 Tags = new List<MarkupTag>
                 {
-                    new() { Name = DmlTags.Bold },
-                    new() { Name = DmlTags.Italic },
-                    new() { Name = DmlTags.Underline },
-                    new() { Name = DmlTags.Strikeout },
+                    new() { Name = DmlTags.Bold, Kind = Fixture.Create<TagKind>() },
+                    new() { Name = DmlTags.Italic, Kind = Fixture.Create<TagKind>() },
+                    new() { Name = DmlTags.Underline, Kind = Fixture.Create<TagKind>() },
+                    new() { Name = DmlTags.Strikeout, Kind = Fixture.Create<TagKind>() },
                 }
             };
 

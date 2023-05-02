@@ -1,4 +1,6 @@
-﻿namespace DML.NET.Tests.Conversion;
+﻿using ToolBX.AwesomeMarkup.Conversion;
+
+namespace DML.NET.Tests.Conversion;
 
 [TestClass]
 public class DmlColorTagConverterTest
@@ -40,7 +42,8 @@ public class DmlColorTagConverterTest
             //Arrange
             var tag = new MarkupTag
             {
-                Name = colorTag
+                Name = colorTag,
+                Kind = Fixture.Create<TagKind>()
             };
 
             //Act
@@ -82,7 +85,8 @@ public class DmlColorTagConverterTest
                         Name = DmlTags.Alpha,
                         Value = "125"
                     }
-                }
+                },
+                Kind = Fixture.Create<TagKind>()
             };
 
             //Act
@@ -104,6 +108,7 @@ public class DmlColorTagConverterTest
             {
                 Name = colorTag,
                 Value = hex,
+                Kind = Fixture.Create<TagKind>()
             };
 
             //Act
@@ -128,7 +133,8 @@ public class DmlColorTagConverterTest
                     new() { Name = DmlTags.Green, Value = Fixture.Create<byte>().ToString() },
                     new() { Name = DmlTags.Blue, Value = Fixture.Create<string>() },
                     new() { Name = DmlTags.Alpha, Value = Fixture.Create<byte>().ToString() },
-                }
+                },
+                Kind = Fixture.Create<TagKind>()
             };
 
             //Act
@@ -153,7 +159,8 @@ public class DmlColorTagConverterTest
                     new() { Name = DmlTags.Green, Value = "-1" },
                     new() { Name = DmlTags.Blue, Value = Fixture.Create<byte>().ToString() },
                     new() { Name = DmlTags.Alpha, Value = Fixture.Create<byte>().ToString() },
-                }
+                },
+                Kind = Fixture.Create<TagKind>()
             };
 
             //Act
@@ -178,7 +185,8 @@ public class DmlColorTagConverterTest
                     new() { Name = DmlTags.Green, Value = Fixture.Create<byte>().ToString() },
                     new() { Name = DmlTags.Blue, Value = "256" },
                     new() { Name = DmlTags.Alpha, Value = Fixture.Create<byte>().ToString() },
-                }
+                },
+                Kind = Fixture.Create<TagKind>()
             };
 
             //Act
@@ -205,7 +213,8 @@ public class DmlColorTagConverterTest
                     new() { Name = DmlTags.Green, Value = color.Green.ToString() },
                     new() { Name = DmlTags.Blue, Value = color.Blue.ToString() },
                     new() { Name = DmlTags.Alpha, Value = color.Alpha.ToString() },
-                }
+                },
+                Kind = Fixture.Create<TagKind>()
             };
 
             //Act
@@ -231,7 +240,8 @@ public class DmlColorTagConverterTest
                     new() { Name = DmlTags.Red, Value = color.Red.ToString() },
                     new() { Name = DmlTags.Green, Value = color.Green.ToString() },
                     new() { Name = DmlTags.Blue, Value = color.Blue.ToString() }
-                }
+                },
+                Kind = Fixture.Create<TagKind>()
             };
 
             //Act
@@ -255,7 +265,8 @@ public class DmlColorTagConverterTest
                 Attributes = new List<MarkupParameter>
                 {
                     new() { Name = DmlTags.Red, Value = red.ToString() },
-                }
+                },
+                Kind = Fixture.Create<TagKind>()
             };
 
             //Act
@@ -279,7 +290,8 @@ public class DmlColorTagConverterTest
                 Attributes = new List<MarkupParameter>
                 {
                     new() { Name = DmlTags.Green, Value = green.ToString() },
-                }
+                },
+                Kind = Fixture.Create<TagKind>()
             };
 
             //Act
@@ -303,7 +315,8 @@ public class DmlColorTagConverterTest
                 Attributes = new List<MarkupParameter>
                 {
                     new() { Name = DmlTags.Blue, Value = blue.ToString() },
-                }
+                },
+                Kind = Fixture.Create<TagKind>()
             };
 
             //Act
@@ -327,7 +340,8 @@ public class DmlColorTagConverterTest
                 Attributes = new List<MarkupParameter>
                 {
                     new() { Name = DmlTags.Alpha, Value = alpha.ToString() },
-                }
+                },
+                Kind = Fixture.Create<TagKind>()
             };
 
             //Act

@@ -1,4 +1,6 @@
-﻿namespace DML.NET.Tests.Conversion;
+﻿using ToolBX.AwesomeMarkup.Conversion;
+
+namespace DML.NET.Tests.Conversion;
 
 public abstract class DmlConverterTesterBase : Tester<DmlConverter>
 {
@@ -79,12 +81,12 @@ public class DmlConverterTest
             //Arrange
             var metaStrings = new List<MetaString>(Fixture.Build<MetaString>().With(x => x.Tags, new List<MarkupTag>
             {
-                new MarkupTag { Name = DmlTags.Color, Value = "First"},
-                new MarkupTag { Name = DmlTags.Color, Value = "Second" },
+                new MarkupTag { Name = DmlTags.Color, Value = "First", Kind = TagKind.Opening },
+                new MarkupTag { Name = DmlTags.Color, Value = "Second", Kind = TagKind.Opening  },
             }).CreateMany());
 
             var expectedColor = Fixture.Create<Color>();
-            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(new MarkupTag{Name = DmlTags.Color, Value = "Second"})).Returns(expectedColor);
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(new MarkupTag { Name = DmlTags.Color, Value = "Second", Kind = Fixture.Create<TagKind>() })).Returns(expectedColor);
 
             //Act
             var result = Instance.Convert(metaStrings);
@@ -103,12 +105,12 @@ public class DmlConverterTest
             //Arrange
             var metaStrings = new List<MetaString>(Fixture.Build<MetaString>().With(x => x.Tags, new List<MarkupTag>
             {
-                new MarkupTag { Name = DmlTags.Highlight, Value = "First"},
-                new MarkupTag { Name = DmlTags.Highlight, Value = "Second" },
+                new MarkupTag { Name = DmlTags.Highlight, Value = "First" , Kind = TagKind.Opening },
+                new MarkupTag { Name = DmlTags.Highlight, Value = "Second", Kind = TagKind.Opening },
             }).CreateMany());
 
             var expectedHighlight = Fixture.Create<Color>();
-            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(new MarkupTag { Name = DmlTags.Highlight, Value = "Second" })).Returns(expectedHighlight);
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(new MarkupTag { Name = DmlTags.Highlight, Value = "Second", Kind = Fixture.Create<TagKind>() })).Returns(expectedHighlight);
 
             //Act
             var result = Instance.Convert(metaStrings);
@@ -297,13 +299,13 @@ public class DmlConverterTest
                 Text = Fixture.Create<string>(),
                 Tags = new List<MarkupTag>
                 {
-                    new MarkupTag { Name = DmlTags.Color, Value = "First" },
-                    new MarkupTag { Name = DmlTags.Color, Value = "Second" },
+                    new MarkupTag { Name = DmlTags.Color, Value = "First", Kind = TagKind.Opening },
+                    new MarkupTag { Name = DmlTags.Color, Value = "Second", Kind = TagKind.Opening },
                 }
             };
 
             var expectedColor = Fixture.Create<Color>();
-            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(new MarkupTag { Name = DmlTags.Color, Value = "Second" })).Returns(expectedColor);
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(new MarkupTag { Name = DmlTags.Color, Value = "Second", Kind = Fixture.Create<TagKind>() })).Returns(expectedColor);
 
             //Act
             var result = Instance.Convert(metaString);
