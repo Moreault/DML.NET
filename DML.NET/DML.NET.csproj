@@ -4,7 +4,7 @@
 		<TargetFramework>net7.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>2.0.0-beta4</Version>
+		<Version>2.0.0-beta5</Version>
 		<RootNamespace>ToolBX.$(AssemblyName)</RootNamespace>
 		<PackageId>ToolBX.$(AssemblyName)</PackageId>
 		<Product>ToolBX.$(AssemblyName)</Product>
@@ -31,7 +31,7 @@
 
 	<ItemGroup>
 	  <PackageReference Include="ToolBX.AwesomeMarkup" Version="2.0.0-beta4" />
-	  <PackageReference Include="ToolBX.ColorFull" Version="2.0.2" />
+	  <PackageReference Include="ToolBX.ColorFull" Version="2.0.3" />
 	  <PackageReference Include="ToolBX.EasyTypeParsing" Version="2.0.1" />
 	</ItemGroup>
 
