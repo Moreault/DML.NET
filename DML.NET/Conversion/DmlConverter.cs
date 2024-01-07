@@ -6,7 +6,7 @@ public interface IDmlConverter
     DmlSubstring Convert(MetaString metaString);
 }
 
-[AutoInject]
+[AutoInject(ServiceLifetime.Singleton)]
 public class DmlConverter : IDmlConverter
 {
     private readonly IDmlColorTagConverter _dmlColorTagConverter;

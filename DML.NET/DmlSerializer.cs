@@ -5,7 +5,7 @@ public interface IDmlSerializer
     DmlString Deserialize(string text);
 }
 
-[AutoInject]
+[AutoInject(ServiceLifetime.Singleton)]
 public class DmlSerializer : IDmlSerializer
 {
     private readonly IMarkupParser _markupParser;
