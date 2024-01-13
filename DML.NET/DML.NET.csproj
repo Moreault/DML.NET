@@ -4,7 +4,7 @@
 		<TargetFramework>net7.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>2.0.0-beta5</Version>
+		<Version>2.2.0-beta1</Version>
 		<RootNamespace>ToolBX.$(AssemblyName)</RootNamespace>
 		<PackageId>ToolBX.$(AssemblyName)</PackageId>
 		<Product>ToolBX.$(AssemblyName)</Product>
@@ -19,20 +19,20 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Include="..\dmlnet.png">
-	    <Pack>True</Pack>
-	    <PackagePath>\</PackagePath>
-	  </None>
-	  <None Include="..\README.md">
-	    <Pack>True</Pack>
-	    <PackagePath>\</PackagePath>
-	  </None>
+		<None Include="..\dmlnet.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="ToolBX.AwesomeMarkup" Version="2.0.0-beta4" />
-	  <PackageReference Include="ToolBX.ColorFull" Version="2.0.3" />
-	  <PackageReference Include="ToolBX.EasyTypeParsing" Version="2.0.1" />
+		<PackageReference Include="ToolBX.AwesomeMarkup" Version="2.2.0" />
+		<PackageReference Include="ToolBX.ColorFull" Version="2.2.1" />
+		<PackageReference Include="ToolBX.EasyTypeParsing" Version="2.2.0" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -42,18 +42,18 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Resources\Exceptions.Designer.cs">
-	    <DesignTime>True</DesignTime>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>Exceptions.resx</DependentUpon>
-	  </Compile>
+		<Compile Update="Resources\Exceptions.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Exceptions.resx</DependentUpon>
+		</Compile>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <EmbeddedResource Update="Resources\Exceptions.resx">
-	    <Generator>ResXFileCodeGenerator</Generator>
-	    <LastGenOutput>Exceptions.Designer.cs</LastGenOutput>
-	  </EmbeddedResource>
+		<EmbeddedResource Update="Resources\Exceptions.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>Exceptions.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
 	</ItemGroup>
 
 </Project>
