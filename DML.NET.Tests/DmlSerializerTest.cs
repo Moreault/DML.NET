@@ -27,12 +27,12 @@ public class DmlSerializerTest
         public void Always_ParseMarkupAndReturnConverted()
         {
             //Arrange
-            var text = Fixture.Create<string>();
+            var text = Dummy.Create<string>();
 
-            var metaStrings = Fixture.Create<List<MetaString>>();
+            var metaStrings = Dummy.Create<List<MetaString>>();
             GetMock<IMarkupParser>().Setup(x => x.Parse(text, null)).Returns(metaStrings);
 
-            var dml = Fixture.Create<DmlString>();
+            var dml = Dummy.Create<DmlString>();
             GetMock<IDmlConverter>().Setup(x => x.Convert(metaStrings)).Returns(dml);
 
             //Act

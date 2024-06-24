@@ -1,6 +1,4 @@
-﻿using ToolBX.AwesomeMarkup.Conversion;
-
-namespace DML.NET.Tests.Conversion;
+﻿namespace DML.NET.Tests.Conversion;
 
 public abstract class DmlConverterTesterBase : Tester<DmlConverter>
 {
@@ -34,7 +32,7 @@ public class DmlConverterTest
         public void WhenOneElementIsNull_Throw()
         {
             //Arrange
-            var metaStrings = new List<MetaString>(new[] { null!, Fixture.Create<MetaString>() });
+            var metaStrings = new List<MetaString>(new[] { null!, Dummy.Create<MetaString>() });
 
             //Act
             Action action = () => Instance.Convert(metaStrings);
@@ -47,7 +45,7 @@ public class DmlConverterTest
         public void WhenMetaStringsHaveNoTags_ReturnTextOnly()
         {
             //Arrange
-            var metaStrings = new List<MetaString>(Fixture.Build<MetaString>().Without(x => x.Tags).CreateMany());
+            var metaStrings = new List<MetaString>(Dummy.Build<MetaString>().Without(x => x.Tags).CreateMany());
 
             //Act
             var result = Instance.Convert(metaStrings);
@@ -63,7 +61,7 @@ public class DmlConverterTest
         public void WhenMetaStringsHaveNoColorTags_ReturnTextOnly()
         {
             //Arrange
-            var metaStrings = new List<MetaString>(Fixture.CreateMany<MetaString>());
+            var metaStrings = new List<MetaString>(Dummy.CreateMany<MetaString>());
 
             //Act
             var result = Instance.Convert(metaStrings);
@@ -79,14 +77,14 @@ public class DmlConverterTest
         public void WhenMetaStringHasColorTagNestedInsideAnotherColorTag_UseLastColorTag()
         {
             //Arrange
-            var metaStrings = new List<MetaString>(Fixture.Build<MetaString>().With(x => x.Tags, new List<MarkupTag>
+            var metaStrings = new List<MetaString>(Dummy.Build<MetaString>().With(x => x.Tags, new List<MarkupTag>
             {
-                new MarkupTag { Name = DmlTags.Color, Value = "First", Kind = TagKind.Opening },
-                new MarkupTag { Name = DmlTags.Color, Value = "Second", Kind = TagKind.Opening  },
+                new() { Name = DmlTags.Color, Value = "First", Kind = TagKind.Opening },
+                new() { Name = DmlTags.Color, Value = "Second", Kind = TagKind.Opening  },
             }).CreateMany());
 
-            var expectedColor = Fixture.Create<Color>();
-            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(new MarkupTag { Name = DmlTags.Color, Value = "Second", Kind = Fixture.Create<TagKind>() })).Returns(expectedColor);
+            var expectedColor = Dummy.Create<Color>();
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(new MarkupTag { Name = DmlTags.Color, Value = "Second", Kind = TagKind.Opening })).Returns(expectedColor);
 
             //Act
             var result = Instance.Convert(metaStrings);
@@ -103,14 +101,14 @@ public class DmlConverterTest
         public void WhenMetaStringHasHighlightTagNestedInsideAnotherHighlightTag_UseLastHighlightTag()
         {
             //Arrange
-            var metaStrings = new List<MetaString>(Fixture.Build<MetaString>().With(x => x.Tags, new List<MarkupTag>
+            var metaStrings = new List<MetaString>(Dummy.Build<MetaString>().With(x => x.Tags, new List<MarkupTag>
             {
-                new MarkupTag { Name = DmlTags.Highlight, Value = "First" , Kind = TagKind.Opening },
-                new MarkupTag { Name = DmlTags.Highlight, Value = "Second", Kind = TagKind.Opening },
+                new() { Name = DmlTags.Highlight, Value = "First" , Kind = TagKind.Opening },
+                new() { Name = DmlTags.Highlight, Value = "Second", Kind = TagKind.Opening },
             }).CreateMany());
 
-            var expectedHighlight = Fixture.Create<Color>();
-            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(new MarkupTag { Name = DmlTags.Highlight, Value = "Second", Kind = Fixture.Create<TagKind>() })).Returns(expectedHighlight);
+            var expectedHighlight = Dummy.Create<Color>();
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(new MarkupTag { Name = DmlTags.Highlight, Value = "Second", Kind = TagKind.Opening })).Returns(expectedHighlight);
 
             //Act
             var result = Instance.Convert(metaStrings);
@@ -129,33 +127,33 @@ public class DmlConverterTest
             //Arrange
             var metaStrings = new List<MetaString>(new List<MetaString>
             {
-                new MetaString
+                new()
                 {
-                    Text = Fixture.Create<string>(),
+                    Text = Dummy.Create<string>(),
                     Tags = new List<MarkupTag>
                     {
-                        Fixture.Build<MarkupTag>().With(x => x.Name, DmlTags.Color).Create()
+                        Dummy.Build<MarkupTag>().With(x => x.Name, DmlTags.Color).Create()
                     }
                 },
-                new MetaString
+                new()
                 {
-                    Text = Fixture.Create<string>(),
+                    Text = Dummy.Create<string>(),
                     Tags = new List<MarkupTag>
                     {
-                        Fixture.Build<MarkupTag>().With(x => x.Name, DmlTags.Color).Create()
+                        Dummy.Build<MarkupTag>().With(x => x.Name, DmlTags.Color).Create()
                     }
                 },
-                new MetaString
+                new()
                 {
-                    Text = Fixture.Create<string>(),
+                    Text = Dummy.Create<string>(),
                     Tags = new List<MarkupTag>
                     {
-                        Fixture.Build<MarkupTag>().With(x => x.Name, DmlTags.Color).Create()
+                        Dummy.Build<MarkupTag>().With(x => x.Name, DmlTags.Color).Create()
                     }
                 },
             });
 
-            var colors = Fixture.Create<List<Color>>();
+            var colors = Dummy.Create<List<Color>>();
             GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaStrings[0].Tags.Single())).Returns(colors[0]);
             GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaStrings[1].Tags.Single())).Returns(colors[1]);
             GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaStrings[2].Tags.Single())).Returns(colors[2]);
@@ -166,15 +164,15 @@ public class DmlConverterTest
             //Assert
             result.Should().BeEquivalentTo(new List<DmlSubstring>
             {
-                new DmlSubstring
+                new()
                 {
                     Text = metaStrings[0].Text,
                     Color = colors[0]
-                }, new DmlSubstring
+                }, new()
                 {
                     Text = metaStrings[1].Text,
                     Color = colors[1]
-                }, new DmlSubstring
+                }, new()
                 {
                     Text = metaStrings[2].Text,
                     Color = colors[2]
@@ -188,33 +186,33 @@ public class DmlConverterTest
             //Arrange
             var metaStrings = new List<MetaString>(new List<MetaString>
             {
-                new MetaString
+                new()
                 {
-                    Text = Fixture.Create<string>(),
+                    Text = Dummy.Create<string>(),
                     Tags = new List<MarkupTag>
                     {
-                        Fixture.Build<MarkupTag>().With(x => x.Name, DmlTags.Highlight).Create()
+                        Dummy.Build<MarkupTag>().With(x => x.Name, DmlTags.Highlight).Create()
                     }
                 },
-                new MetaString
+                new()
                 {
-                    Text = Fixture.Create<string>(),
+                    Text = Dummy.Create<string>(),
                     Tags = new List<MarkupTag>
                     {
-                        Fixture.Build<MarkupTag>().With(x => x.Name, DmlTags.Highlight).Create()
+                        Dummy.Build<MarkupTag>().With(x => x.Name, DmlTags.Highlight).Create()
                     }
                 },
-                new MetaString
+                new()
                 {
-                    Text = Fixture.Create<string>(),
+                    Text = Dummy.Create<string>(),
                     Tags = new List<MarkupTag>
                     {
-                        Fixture.Build<MarkupTag>().With(x => x.Name, DmlTags.Highlight).Create()
+                        Dummy.Build<MarkupTag>().With(x => x.Name, DmlTags.Highlight).Create()
                     }
                 },
             });
 
-            var highlights = Fixture.Create<List<Color>>();
+            var highlights = Dummy.Create<List<Color>>();
             GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaStrings[0].Tags.Single())).Returns(highlights[0]);
             GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaStrings[1].Tags.Single())).Returns(highlights[1]);
             GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaStrings[2].Tags.Single())).Returns(highlights[2]);
@@ -225,15 +223,15 @@ public class DmlConverterTest
             //Assert
             result.Should().BeEquivalentTo(new List<DmlSubstring>
             {
-                new DmlSubstring
+                new()
                 {
                     Text = metaStrings[0].Text,
                     Highlight = highlights[0]
-                }, new DmlSubstring
+                }, new()
                 {
                     Text = metaStrings[1].Text,
                     Highlight = highlights[1]
-                }, new DmlSubstring
+                }, new()
                 {
                     Text = metaStrings[2].Text,
                     Highlight = highlights[2]
@@ -262,7 +260,7 @@ public class DmlConverterTest
         public void WhenThereIsNoTag_ReturnTextOnly()
         {
             //Arrange
-            var metaString = Fixture.Build<MetaString>().Without(x => x.Tags).Create();
+            var metaString = Dummy.Build<MetaString>().Without(x => x.Tags).Create();
 
             //Act
             var result = Instance.Convert(metaString);
@@ -278,7 +276,7 @@ public class DmlConverterTest
         public void WhenThereIsNoColorTag_ReturnTextOnly()
         {
             //Arrange
-            var metaString = Fixture.Create<MetaString>();
+            var metaString = Dummy.Create<MetaString>();
 
             //Act
             var result = Instance.Convert(metaString);
@@ -296,16 +294,16 @@ public class DmlConverterTest
             //Arrange
             var metaString = new MetaString
             {
-                Text = Fixture.Create<string>(),
+                Text = Dummy.Create<string>(),
                 Tags = new List<MarkupTag>
                 {
-                    new MarkupTag { Name = DmlTags.Color, Value = "First", Kind = TagKind.Opening },
-                    new MarkupTag { Name = DmlTags.Color, Value = "Second", Kind = TagKind.Opening },
+                    new() { Name = DmlTags.Color, Value = "First", Kind = TagKind.Opening },
+                    new() { Name = DmlTags.Color, Value = "Second", Kind = TagKind.Opening },
                 }
             };
 
-            var expectedColor = Fixture.Create<Color>();
-            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(new MarkupTag { Name = DmlTags.Color, Value = "Second", Kind = Fixture.Create<TagKind>() })).Returns(expectedColor);
+            var expectedColor = Dummy.Create<Color>();
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(new MarkupTag { Name = DmlTags.Color, Value = "Second", Kind = TagKind.Opening })).Returns(expectedColor);
 
             //Act
             var result = Instance.Convert(metaString);
@@ -324,14 +322,14 @@ public class DmlConverterTest
             //Arrange
             var metaString = new MetaString
             {
-                Text = Fixture.Create<string>(),
+                Text = Dummy.Create<string>(),
                 Tags = new List<MarkupTag>
                 {
-                    Fixture.Build<MarkupTag>().With(x => x.Name, DmlTags.Color).Create()
+                    Dummy.Build<MarkupTag>().With(x => x.Name, DmlTags.Color).Create()
                 }
             };
 
-            var color = Fixture.Create<Color>();
+            var color = Dummy.Create<Color>();
             GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaString.Tags.Single())).Returns(color);
 
             //Act
@@ -349,9 +347,9 @@ public class DmlConverterTest
         public void Always_ConvertTextStyles()
         {
             //Arrange
-            var metaString = Fixture.Create<MetaString>();
+            var metaString = Dummy.Create<MetaString>();
 
-            var styles = Fixture.CreateMany<TextStyle>().ToList();
+            var styles = Dummy.CreateMany<TextStyle>().ToList();
             GetMock<IDmlTextStyleConverter>().Setup(x => x.Convert(metaString)).Returns(styles);
 
             //Act
