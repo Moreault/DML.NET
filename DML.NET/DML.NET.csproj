@@ -30,9 +30,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="ToolBX.AwesomeMarkup" Version="2.2.0" />
-		<PackageReference Include="ToolBX.ColorFull" Version="2.2.1" />
-		<PackageReference Include="ToolBX.EasyTypeParsing" Version="2.2.0" />
+		<PackageReference Include="ToolBX.AwesomeMarkup" Version="3.0.0-beta1" />
+		<PackageReference Include="ToolBX.ColorFull" Version="3.0.0-beta1" />
+		<PackageReference Include="ToolBX.EasyTypeParsing" Version="3.0.0-beta1" />
 	</ItemGroup>
 
 	<ItemGroup>

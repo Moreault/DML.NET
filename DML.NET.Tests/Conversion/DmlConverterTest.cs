@@ -45,7 +45,7 @@ public class DmlConverterTest
         public void WhenMetaStringsHaveNoTags_ReturnTextOnly()
         {
             //Arrange
-            var metaStrings = new List<MetaString>(Dummy.Build<MetaString>().Without(x => x.Tags).CreateMany());
+            var metaStrings = new List<MetaString>(Dummy.Build<MetaString>().Omit(x => x.Tags).CreateMany());
 
             //Act
             var result = Instance.Convert(metaStrings);
@@ -260,7 +260,7 @@ public class DmlConverterTest
         public void WhenThereIsNoTag_ReturnTextOnly()
         {
             //Arrange
-            var metaString = Dummy.Build<MetaString>().Without(x => x.Tags).Create();
+            var metaString = Dummy.Build<MetaString>().Omit(x => x.Tags).Create();
 
             //Act
             var result = Instance.Convert(metaString);
