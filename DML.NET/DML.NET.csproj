@@ -4,7 +4,7 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>2.2.0-beta1</Version>
+		<Version>3.0.0</Version>
 		<RootNamespace>ToolBX.$(AssemblyName)</RootNamespace>
 		<PackageId>ToolBX.$(AssemblyName)</PackageId>
 		<Product>ToolBX.$(AssemblyName)</Product>
@@ -30,9 +30,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="ToolBX.AwesomeMarkup" Version="3.0.0-beta1" />
-		<PackageReference Include="ToolBX.ColorFull" Version="3.0.0-beta1" />
-		<PackageReference Include="ToolBX.EasyTypeParsing" Version="3.0.0-beta1" />
+		<PackageReference Include="ToolBX.AwesomeMarkup" Version="3.0.0" />
+		<PackageReference Include="ToolBX.ColorFull" Version="3.0.0" />
+		<PackageReference Include="ToolBX.EasyTypeParsing" Version="3.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
