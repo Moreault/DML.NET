@@ -25,21 +25,21 @@ public class DmlStringExtensionsTest
             //Arrange
             var source = new List<DmlSubstring>
             {
-                new DmlSubstring
+                new()
                 {
                     Text = "C'est donc ben ",
-                    Color = Fixture.Create<Color>()
+                    Color = Dummy.Create<Color>()
                 },
-                new DmlSubstring()
+                new()
                 {
                     Text = "laid ",
-                    Color = Fixture.Create<Color>()
+                    Color = Dummy.Create<Color>()
 
                 },
-                new DmlSubstring
+                new()
                 {
                     Text = "chez vous!",
-                    Color = Fixture.Create<Color>()
+                    Color = Dummy.Create<Color>()
                 },
             };
 
@@ -49,15 +49,15 @@ public class DmlStringExtensionsTest
             //Assert
             result.Should().BeEquivalentTo(new DmlString(new List<DmlSubstringEntry>
             {
-                new DmlSubstringEntry(source[0])
+                new(source[0])
                 {
                     StartIndex = 0
                 },
-                new DmlSubstringEntry(source[1])
+                new(source[1])
                 {
                     StartIndex = 15
                 },
-                new DmlSubstringEntry(source[2])
+                new(source[2])
                 {
                     StartIndex = 20
                 },

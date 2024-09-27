@@ -25,20 +25,20 @@ public class DmlStringTest
             //Arrange
             var dmlString = new List<DmlSubstring>
             {
-                new DmlSubstring
+                new()
                 {
                     Text = "That base is ",
-                    Color = Fixture.Create<Color>()
+                    Color = Dummy.Create<Color>()
                 },
-                new DmlSubstring
+                new()
                 {
                     Text = "on the outskirts of ",
-                    Color = Fixture.Create<Color>()
+                    Color = Dummy.Create<Color>()
                 },
-                new DmlSubstring
+                new()
                 {
                     Text = "Behabad",
-                    Color = Fixture.Create<Color>()
+                    Color = Dummy.Create<Color>()
                 },
             }.ToDmlString();
 
@@ -48,12 +48,12 @@ public class DmlStringTest
             //Assert
             result.Should().BeEquivalentTo(new List<DmlSubstring>
             {
-                new DmlSubstring
+                new()
                 {
                     Text = "outskirts of ",
                     Color = dmlString[1].Color
                 },
-                new DmlSubstring
+                new()
                 {
                     Text = "Behabad",
                     Color = dmlString[2].Color
@@ -71,25 +71,25 @@ public class DmlStringTest
             //Arrange
             var dmlString = new List<DmlSubstring>
             {
-                new DmlSubstring
+                new()
                 {
                     Text = "That base is ",
-                    Color = Fixture.Create<Color>()
+                    Color = Dummy.Create<Color>()
                 },
-                new DmlSubstring
+                new()
                 {
                     Text = "on the outskirts of ",
-                    Color = Fixture.Create<Color>()
+                    Color = Dummy.Create<Color>()
                 },
-                new DmlSubstring
+                new()
                 {
                     Text = "Behabad",
-                    Color = Fixture.Create<Color>()
+                    Color = Dummy.Create<Color>()
                 },
             }.ToDmlString();
 
-            var startingIndex = -Fixture.Create<int>();
-            var length = Fixture.Create<int>();
+            var startingIndex = -Dummy.Create<int>();
+            var length = Dummy.Create<int>();
 
             //Act
             Action action = () => dmlString.Substring(startingIndex, length);
@@ -104,25 +104,25 @@ public class DmlStringTest
             //Arrange
             var dmlString = new List<DmlSubstring>
             {
-                new DmlSubstring
+                new()
                 {
                     Text = "That base is ",
-                    Color = Fixture.Create<Color>()
+                    Color = Dummy.Create<Color>()
                 },
-                new DmlSubstring
+                new()
                 {
                     Text = "on the outskirts of ",
-                    Color = Fixture.Create<Color>()
+                    Color = Dummy.Create<Color>()
                 },
-                new DmlSubstring
+                new()
                 {
                     Text = "Behabad",
-                    Color = Fixture.Create<Color>()
+                    Color = Dummy.Create<Color>()
                 },
             }.ToDmlString();
 
-            var startingIndex = Fixture.Create<int>();
-            var length = -Fixture.Create<int>();
+            var startingIndex = Dummy.Create<int>();
+            var length = -Dummy.Create<int>();
 
             //Act
             Action action = () => dmlString.Substring(startingIndex, length);
@@ -137,24 +137,24 @@ public class DmlStringTest
             //Arrange
             var dmlString = new List<DmlSubstring>
             {
-                new DmlSubstring
+                new()
                 {
                     Text = "That base is ",
-                    Color = Fixture.Create<Color>()
+                    Color = Dummy.Create<Color>()
                 },
-                new DmlSubstring
+                new()
                 {
                     Text = "on the outskirts of ",
-                    Color = Fixture.Create<Color>()
+                    Color = Dummy.Create<Color>()
                 },
-                new DmlSubstring
+                new()
                 {
                     Text = "Behabad",
-                    Color = Fixture.Create<Color>()
+                    Color = Dummy.Create<Color>()
                 },
             }.ToDmlString();
 
-            var startingIndex = Fixture.Create<int>();
+            var startingIndex = Dummy.Create<int>();
             var length = 0;
 
             //Act
@@ -170,20 +170,20 @@ public class DmlStringTest
             //Arrange
             var dmlString = new List<DmlSubstring>
             {
-                new DmlSubstring
+                new()
                 {
                     Text = "That base is ",
-                    Color = Fixture.Create<Color>()
+                    Color = Dummy.Create<Color>()
                 },
-                new DmlSubstring
+                new()
                 {
                     Text = "on the outskirts of ",
-                    Color = Fixture.Create<Color>()
+                    Color = Dummy.Create<Color>()
                 },
-                new DmlSubstring
+                new()
                 {
                     Text = "Behabad",
-                    Color = Fixture.Create<Color>()
+                    Color = Dummy.Create<Color>()
                 },
             }.ToDmlString();
 
@@ -193,7 +193,7 @@ public class DmlStringTest
             //Assert
             result.Should().BeEquivalentTo(new List<DmlSubstring>
             {
-                new DmlSubstring
+                new()
                 {
                     Text = "That",
                     Color = dmlString[0].Color
@@ -207,20 +207,20 @@ public class DmlStringTest
             //Arrange
             var dmlString = new List<DmlSubstring>
             {
-                new DmlSubstring
+                new()
                 {
                     Text = "That base is ",
-                    Color = Fixture.Create<Color>()
+                    Color = Dummy.Create<Color>()
                 },
-                new DmlSubstring
+                new()
                 {
                     Text = "on the outskirts of ",
-                    Color = Fixture.Create<Color>()
+                    Color = Dummy.Create<Color>()
                 },
-                new DmlSubstring
+                new()
                 {
                     Text = "Behabad",
-                    Color = Fixture.Create<Color>()
+                    Color = Dummy.Create<Color>()
                 },
             }.ToDmlString();
 
@@ -230,12 +230,12 @@ public class DmlStringTest
             //Assert
             result.Should().BeEquivalentTo(new List<DmlSubstring>
             {
-                new DmlSubstring
+                new()
                 {
                     Text = "base is ",
                     Color = dmlString[0].Color
                 },
-                new DmlSubstring
+                new()
                 {
                     Text = "on the outskirts",
                     Color = dmlString[1].Color
@@ -249,20 +249,20 @@ public class DmlStringTest
             //Arrange
             var dmlString = new List<DmlSubstring>
             {
-                new DmlSubstring
+                new()
                 {
                     Text = "That base is ",
-                    Color = Fixture.Create<Color>()
+                    Color = Dummy.Create<Color>()
                 },
-                new DmlSubstring
+                new()
                 {
                     Text = "on the outskirts of ",
-                    Color = Fixture.Create<Color>()
+                    Color = Dummy.Create<Color>()
                 },
-                new DmlSubstring
+                new()
                 {
                     Text = "Behabad",
-                    Color = Fixture.Create<Color>()
+                    Color = Dummy.Create<Color>()
                 },
             }.ToDmlString();
 
@@ -272,12 +272,12 @@ public class DmlStringTest
             //Assert
             result.Should().BeEquivalentTo(new List<DmlSubstring>
             {
-                new DmlSubstring
+                new()
                 {
                     Text = "outskirts of ",
                     Color = dmlString[1].Color
                 },
-                new DmlSubstring
+                new()
                 {
                     Text = "Behabad",
                     Color = dmlString[2].Color

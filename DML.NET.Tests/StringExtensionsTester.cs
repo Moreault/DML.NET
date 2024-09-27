@@ -10,10 +10,10 @@ public class StringExtensionsTester
         public void Always_SurroundStringWithColor()
         {
             //Arrange
-            var value = Fixture.Create<string>();
-            var red = Fixture.Create<byte>();
-            var green = Fixture.Create<byte>();
-            var blue = Fixture.Create<byte>();
+            var value = Dummy.Create<string>();
+            var red = Dummy.Create<byte>();
+            var green = Dummy.Create<byte>();
+            var blue = Dummy.Create<byte>();
 
             //Act
             var result = value.Color(red, green, blue);
@@ -30,8 +30,8 @@ public class StringExtensionsTester
         public void Always_SurroundStringWithColor()
         {
             //Arrange
-            var value = Fixture.Create<string>();
-            var color = Fixture.Create<Color>();
+            var value = Dummy.Create<string>();
+            var color = Dummy.Create<Color>();
 
             //Act
             var result = value.Color(color);
@@ -48,10 +48,10 @@ public class StringExtensionsTester
         public void Always_SurroundStringWithColor()
         {
             //Arrange
-            var value = Fixture.Create<string>();
-            var red = Fixture.Create<byte>();
-            var green = Fixture.Create<byte>();
-            var blue = Fixture.Create<byte>();
+            var value = Dummy.Create<string>();
+            var red = Dummy.Create<byte>();
+            var green = Dummy.Create<byte>();
+            var blue = Dummy.Create<byte>();
 
             //Act
             var result = value.Highlight(red, green, blue);
@@ -68,8 +68,8 @@ public class StringExtensionsTester
         public void Always_SurroundStringWithColor()
         {
             //Arrange
-            var value = Fixture.Create<string>();
-            var color = Fixture.Create<Color>();
+            var value = Dummy.Create<string>();
+            var color = Dummy.Create<Color>();
 
             //Act
             var result = value.Highlight(color);
@@ -86,7 +86,7 @@ public class StringExtensionsTester
         public void WhenStyleIsBold_SurroundWithBold()
         {
             //Arrange
-            var value = Fixture.Create<string>();
+            var value = Dummy.Create<string>();
 
             //Act
             var result = value.Style(TextStyle.Bold);
@@ -99,7 +99,7 @@ public class StringExtensionsTester
         public void WhenStyleIsItalic_SurroundWithItalic()
         {
             //Arrange
-            var value = Fixture.Create<string>();
+            var value = Dummy.Create<string>();
 
             //Act
             var result = value.Style(TextStyle.Italic);
@@ -112,7 +112,7 @@ public class StringExtensionsTester
         public void WhenStyleIsStrikeout_SurroundWithStrikeout()
         {
             //Arrange
-            var value = Fixture.Create<string>();
+            var value = Dummy.Create<string>();
 
             //Act
             var result = value.Style(TextStyle.Strikeout);
@@ -125,7 +125,7 @@ public class StringExtensionsTester
         public void WhenStyleIsUnderline_SurroundWithUnderline()
         {
             //Arrange
-            var value = Fixture.Create<string>();
+            var value = Dummy.Create<string>();
 
             //Act
             var result = value.Style(TextStyle.Underline);
@@ -138,7 +138,7 @@ public class StringExtensionsTester
         public void WhenOutOfRange_Throw()
         {
             //Arrange
-            var value = Fixture.Create<string>();
+            var value = Dummy.Create<string>();
 
             //Act
             var action = () => value.Style((TextStyle)int.MaxValue);
@@ -155,7 +155,7 @@ public class StringExtensionsTester
         public void Always_SurroundWithBold()
         {
             //Arrange
-            var value = Fixture.Create<string>();
+            var value = Dummy.Create<string>();
 
             //Act
             var result = value.Bold();
@@ -172,7 +172,7 @@ public class StringExtensionsTester
         public void Always_SurroundWithItalic()
         {
             //Arrange
-            var value = Fixture.Create<string>();
+            var value = Dummy.Create<string>();
 
             //Act
             var result = value.Italic();
@@ -189,7 +189,7 @@ public class StringExtensionsTester
         public void Always_SurroundWithStrikeout()
         {
             //Arrange
-            var value = Fixture.Create<string>();
+            var value = Dummy.Create<string>();
 
             //Act
             var result = value.Strikeout();
@@ -206,7 +206,7 @@ public class StringExtensionsTester
         public void Always_SurroundWithUnderline()
         {
             //Arrange
-            var value = Fixture.Create<string>();
+            var value = Dummy.Create<string>();
 
             //Act
             var result = value.Underline();
