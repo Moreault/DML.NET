@@ -12,4 +12,5 @@ internal static class DmlTags
     public const string Italic = "italic";
     public const string Underline = "underline";
     public const string Strikeout = "strikeout";
+    public const string Keyword = "keyword";
 }

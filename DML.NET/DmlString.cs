@@ -1,6 +1,6 @@
 ﻿namespace ToolBX.DML.NET;
 
-public class DmlString : IReadOnlyList<DmlSubstringEntry>, IEquatable<DmlString>
+public sealed class DmlString : IReadOnlyList<DmlSubstringEntry>, IEquatable<DmlString>
 {
     private readonly IReadOnlyList<DmlSubstringEntry> _items;
 
@@ -43,7 +43,7 @@ public class DmlString : IReadOnlyList<DmlSubstringEntry>, IEquatable<DmlString>
         var start = GetDmlIndex(startingIndex);
         var end = GetDmlIndex(startingIndex + length);
 
-        var newstrings = new List<DmlSubstring>();
+        var newStrings = new List<DmlSubstring>();
 
         if (start.Outer == end.Outer)
             return new List<DmlSubstring>
@@ -61,27 +61,27 @@ public class DmlString : IReadOnlyList<DmlSubstringEntry>, IEquatable<DmlString>
 
             if (i > start.Outer && i < end.Outer)
             {
-                newstrings.Add(item);
+                newStrings.Add(item);
             }
             else if (i == start.Outer)
             {
-                newstrings.Add(new DmlSubstring
+                newStrings.Add(new DmlSubstring
                 {
-                    Text = item.Text.Substring(start.Inner),
+                    Text = item.Text[start.Inner..],
                     Color = item.Color
                 });
             }
             else if (i == end.Outer)
             {
-                newstrings.Add(new DmlSubstring
+                newStrings.Add(new DmlSubstring
                 {
-                    Text = item.Text.Substring(0, end.Inner),
+                    Text = item.Text[..end.Inner],
                     Color = item.Color
                 });
             }
         }
 
-        return newstrings.ToDmlString();
+        return newStrings.ToDmlString();
     }
 
     private DmlStringIndex GetDmlIndex(int fullStringIndex)
@@ -112,7 +112,7 @@ public class DmlString : IReadOnlyList<DmlSubstringEntry>, IEquatable<DmlString>
     {
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != this.GetType()) return false;
+        if (obj.GetType() != GetType()) return false;
         return Equals((DmlString)obj);
     }
 
@@ -121,7 +121,7 @@ public class DmlString : IReadOnlyList<DmlSubstringEntry>, IEquatable<DmlString>
         return (_items.GetHashCode());
     }
 
-    public static bool operator ==(DmlString? a, DmlString? b) => a is null && b is null || a is not null && a.Equals(b);
+    public static bool operator ==(DmlString? a, DmlString? b) => (a is null && b is null) || (a is not null && a.Equals(b));
 
     public static bool operator !=(DmlString? a, DmlString? b) => !(a == b);
 

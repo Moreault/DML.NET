@@ -7,7 +7,7 @@ public interface IDmlConverter
 }
 
 [AutoInject(ServiceLifetime.Singleton)]
-public class DmlConverter : IDmlConverter
+public sealed class DmlConverter : IDmlConverter
 {
     private readonly IDmlColorTagConverter _dmlColorTagConverter;
     private readonly IDmlTextStyleConverter _dmlTextStyleConverter;
@@ -30,12 +30,14 @@ public class DmlConverter : IDmlConverter
 
         var colorTag = metaString.Tags.LastOrDefault(x => string.Equals(x.Name, DmlTags.Color, StringComparison.InvariantCultureIgnoreCase));
         var highlightTag = metaString.Tags.LastOrDefault(x => string.Equals(x.Name, DmlTags.Highlight, StringComparison.InvariantCultureIgnoreCase));
+        var keywordTag = metaString.Tags.LastOrDefault(x => string.Equals(x.Name, DmlTags.Keyword, StringComparison.InvariantCultureIgnoreCase));
 
         return new DmlSubstring
         {
             Text = metaString.Text,
             Color = colorTag == null ? null : _dmlColorTagConverter.Convert(colorTag),
             Highlight = highlightTag == null ? null : _dmlColorTagConverter.Convert(highlightTag),
+            Keyword = keywordTag == null ? null : string.IsNullOrWhiteSpace(keywordTag.Value) ? metaString.Text : keywordTag.Value,
             Styles = _dmlTextStyleConverter.Convert(metaString)
         };
     }

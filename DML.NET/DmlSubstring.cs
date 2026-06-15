@@ -1,6 +1,6 @@
 ﻿namespace ToolBX.DML.NET;
 
-public record DmlSubstring
+public sealed record DmlSubstring
 {
     /// <summary>
     /// Clean text without any DML tags.
@@ -18,6 +18,13 @@ public record DmlSubstring
     public Color? Highlight { get; init; }
 
     /// <summary>
+    /// Identifier of the keyword this text refers to, if any. DML does not interpret this value: it is up to the
+    /// consuming application to resolve it (ex: to color the text, make it clickable, fetch a tooltip, etc.) When a
+    /// keyword tag is present without an explicit id, this defaults to <see cref="Text"/>.
+    /// </summary>
+    public string? Keyword { get; init; }
+
+    /// <summary>
     /// Number of characters in the string (excluding DML tags.)
     /// </summary>
     public int Length => Text.Length;
@@ -25,7 +32,7 @@ public record DmlSubstring
     /// <summary>
     /// All the text styles contained in the substring (ex: Bold, Italic, Strikeout, etc...)
     /// </summary>
-    public IReadOnlyList<TextStyle> Styles { get; init; } = Array.Empty<TextStyle>();
+    public IReadOnlyList<TextStyle> Styles { get; init; } = [];
 
     public override string ToString()
     {

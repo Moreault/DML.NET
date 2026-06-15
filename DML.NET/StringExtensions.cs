@@ -29,6 +29,21 @@ public static class StringExtensions
     }
 
     /// <summary>
+    /// Surrounds the string with the 'keyword' DML tag, defaulting its id to the text itself when deserialized.
+    /// </summary>
+    public static string Keyword(this string value) => $"<{DmlTags.Keyword}>{value}</{DmlTags.Keyword}>";
+
+    /// <summary>
+    /// Surrounds the string with the 'keyword' DML tag using the keyword's id. A null or blank id falls back to
+    /// the id-less form, in which case the id defaults to the text itself when deserialized.
+    /// </summary>
+    public static string Keyword(this string value, string id)
+    {
+        if (string.IsNullOrWhiteSpace(id)) return value.Keyword();
+        return $"<{DmlTags.Keyword}={id}>{value}</{DmlTags.Keyword}>";
+    }
+
+    /// <summary>
     /// Surrounds the string with a DML text style tag
     /// </summary>
     public static string Style(this string value, TextStyle style)

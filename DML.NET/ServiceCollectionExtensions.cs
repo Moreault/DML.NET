@@ -1,4 +1,6 @@
-﻿namespace ToolBX.DML.NET;
+﻿using ToolBX.AutoInject.Generated;
+
+namespace ToolBX.DML.NET;
 
 public static class ServiceCollectionExtensions
 {
@@ -10,7 +12,7 @@ public static class ServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(services);
         options ??= new AutoInjectOptions();
         services.AddAwesomeMarkup(options.DefaultLifetime);
-        AutoInject.Generated.AutoInjectRegistrar.Register(services, options.DefaultLifetime);
+        AutoInjectRegistrar.Register(services, options.DefaultLifetime);
         return services;
     }
 }

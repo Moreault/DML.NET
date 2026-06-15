@@ -80,6 +80,54 @@ public class StringExtensionsTester
     }
 
     [TestClass]
+    public class Keyword_NoId : Tester
+    {
+        [TestMethod]
+        public void Always_SurroundStringWithKeyword()
+        {
+            //Arrange
+            var value = Dummy.Create<string>();
+
+            //Act
+            var result = value.Keyword();
+
+            //Assert
+            result.Should().Be($"<keyword>{value}</keyword>");
+        }
+    }
+
+    [TestClass]
+    public class Keyword_WithId : Tester
+    {
+        [TestMethod]
+        public void WhenIdIsProvided_SurroundStringWithKeywordAndId()
+        {
+            //Arrange
+            var value = Dummy.Create<string>();
+            var id = Dummy.Create<string>();
+
+            //Act
+            var result = value.Keyword(id);
+
+            //Assert
+            result.Should().Be($"<keyword={id}>{value}</keyword>");
+        }
+
+        [TestMethod]
+        public void WhenIdIsNullOrBlank_FallBackToIdLessKeyword()
+        {
+            //Arrange
+            var value = Dummy.Create<string>();
+
+            //Act
+            var result = value.Keyword(" ");
+
+            //Assert
+            result.Should().Be($"<keyword>{value}</keyword>");
+        }
+    }
+
+    [TestClass]
     public class Style : Tester
     {
         [TestMethod]

@@ -4,7 +4,7 @@ public static class DmlStringExtensions
 {
     public static DmlString ToDmlString(this IEnumerable<DmlSubstring> source)
     {
-        if (source == null) throw new ArgumentNullException(nameof(source));
+        ArgumentNullException.ThrowIfNull(source);
 
         var currentIndex = 0;
         return new DmlString(source.Select(x =>

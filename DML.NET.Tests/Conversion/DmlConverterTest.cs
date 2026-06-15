@@ -32,7 +32,7 @@ public class DmlConverterTest
         public void WhenOneElementIsNull_Throw()
         {
             //Arrange
-            var metaStrings = new List<MetaString>(new[] { null!, Dummy.Create<MetaString>() });
+            var metaStrings = new List<MetaString>([null!, Dummy.Create<MetaString>()]);
 
             //Act
             Action action = () => Instance.Convert(metaStrings);
@@ -360,6 +360,124 @@ public class DmlConverterTest
             {
                 Text = metaString.Text,
                 Styles = styles
+            });
+        }
+
+        [TestMethod]
+        public void WhenThereIsNoKeywordTag_KeywordIsNull()
+        {
+            //Arrange
+            var metaString = Dummy.Build<MetaString>().Omit(x => x.Tags).Create();
+
+            //Act
+            var result = Instance.Convert(metaString);
+
+            //Assert
+            result.Keyword.Should().BeNull();
+        }
+
+        [TestMethod]
+        public void WhenKeywordTagHasId_UseId()
+        {
+            //Arrange
+            var id = Dummy.Create<string>();
+            var metaString = new MetaString
+            {
+                Text = Dummy.Create<string>(),
+                Tags = new List<MarkupTag>
+                {
+                    new() { Name = DmlTags.Keyword, Value = id, Kind = TagKind.Opening }
+                }
+            };
+
+            //Act
+            var result = Instance.Convert(metaString);
+
+            //Assert
+            result.Should().BeEquivalentTo(new DmlSubstring
+            {
+                Text = metaString.Text,
+                Keyword = id
+            });
+        }
+
+        [TestMethod]
+        public void WhenKeywordTagHasNoId_DefaultIdToText()
+        {
+            //Arrange
+            var metaString = new MetaString
+            {
+                Text = Dummy.Create<string>(),
+                Tags = new List<MarkupTag>
+                {
+                    new() { Name = DmlTags.Keyword, Kind = TagKind.Opening }
+                }
+            };
+
+            //Act
+            var result = Instance.Convert(metaString);
+
+            //Assert
+            result.Should().BeEquivalentTo(new DmlSubstring
+            {
+                Text = metaString.Text,
+                Keyword = metaString.Text
+            });
+        }
+
+        [TestMethod]
+        public void WhenKeywordTagNestedInsideAnotherKeywordTag_UseLastKeywordTag()
+        {
+            //Arrange
+            var metaString = new MetaString
+            {
+                Text = Dummy.Create<string>(),
+                Tags = new List<MarkupTag>
+                {
+                    new() { Name = DmlTags.Keyword, Value = "First", Kind = TagKind.Opening },
+                    new() { Name = DmlTags.Keyword, Value = "Second", Kind = TagKind.Opening },
+                }
+            };
+
+            //Act
+            var result = Instance.Convert(metaString);
+
+            //Assert
+            result.Should().BeEquivalentTo(new DmlSubstring
+            {
+                Text = metaString.Text,
+                Keyword = "Second"
+            });
+        }
+
+        [TestMethod]
+        public void WhenMetaStringHasBothKeywordAndColor_SetBoth()
+        {
+            //Arrange
+            var id = Dummy.Create<string>();
+            var colorTag = Dummy.Build<MarkupTag>().With(x => x.Name, DmlTags.Color).Create();
+            var metaString = new MetaString
+            {
+                Text = Dummy.Create<string>(),
+                Tags = new List<MarkupTag>
+                {
+                    colorTag,
+                    new() { Name = DmlTags.Keyword, Value = id, Kind = TagKind.Opening }
+                }
+            };
+
+            var color = Dummy.Create<Color>();
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(colorTag)).Returns(color);
+
+            //Act
+            var result = Instance.Convert(metaString);
+
+            //Assert
+            result.Should().BeEquivalentTo(new DmlSubstring
+            {
+                Text = metaString.Text,
+                Color = color,
+                Keyword = id
             });
         }
     }

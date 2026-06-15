@@ -6,7 +6,7 @@ public interface IDmlSerializer
 }
 
 [AutoInject(ServiceLifetime.Singleton)]
-public class DmlSerializer : IDmlSerializer
+public sealed class DmlSerializer : IDmlSerializer
 {
     private readonly IMarkupParser _markupParser;
     private readonly IDmlConverter _dmlConverter;

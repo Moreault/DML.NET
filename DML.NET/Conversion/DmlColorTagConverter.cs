@@ -6,7 +6,7 @@ public interface IDmlColorTagConverter
 }
 
 [AutoInject(ServiceLifetime.Singleton)]
-public class DmlColorTagConverter : IDmlColorTagConverter
+public sealed class DmlColorTagConverter : IDmlColorTagConverter
 {
     public Color Convert(MarkupTag tag)
     {
