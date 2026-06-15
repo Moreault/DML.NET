@@ -94,7 +94,7 @@ public class DmlConverterTest
             {
                 Text = x.Text,
                 Color = expectedColor
-            }));
+            }).ToDmlString());
         }
 
         [TestMethod]
@@ -118,7 +118,7 @@ public class DmlConverterTest
             {
                 Text = x.Text,
                 Highlight = expectedHighlight
-            }));
+            }).ToDmlString());
         }
 
         [TestMethod]

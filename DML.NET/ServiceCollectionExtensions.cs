@@ -7,6 +7,10 @@ public static class ServiceCollectionExtensions
     /// </summary>
     public static IServiceCollection AddDml(this IServiceCollection services, AutoInjectOptions? options = null)
     {
-        return services.AddAutoInjectServices(Assembly.GetExecutingAssembly(), options);
+        ArgumentNullException.ThrowIfNull(services);
+        options ??= new AutoInjectOptions();
+        services.AddAwesomeMarkup(options.DefaultLifetime);
+        AutoInject.Generated.AutoInjectRegistrar.Register(services, options.DefaultLifetime);
+        return services;
     }
 }
