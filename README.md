@@ -40,7 +40,7 @@ public void YourMethod()
 }
 ```
 
-You can always assume that a null or empty value for properties such as Color or Styles mean that this part of text should use default values.
+You can always assume that a null or empty value for properties such as Color, Styles or Keyword mean that this part of text should use default values (or, in the case of Keyword, that the text isn't a keyword at all.)
 
 ### Sample project
 You can use the sample project provided in the solution to test out your use cases with DML to see if they apply correctly. 
@@ -54,6 +54,7 @@ Currently, DML only supports the following tags :
 * Italic
 * Underline
 * Strikeout
+* Keyword (marks a span as a meaningful term your game can color, style and/or make clickable)
 
 All tags are case-insensitive and does not allow duplicates. In other words; the same string fragment cannot be italic twice nor can it define mutliple colors at once.
 
@@ -89,6 +90,35 @@ var text = "I cannot emphasize this enough; <highlight red=255 blue=255><color r
 ```
 
 Of course, the above will only be true if your output even supports bold-italic text. If not, then it would be up to you to decide which one takes precedence.
+
+### Keyword
+
+The keyword tag marks a span of text as a meaningful term- the kind of important word you might see highlighted in dialog and click on to get more information. DML deliberately calls it a "keyword" rather than a "link" because DML is only a spec : it doesn't know (or care) what clicking it does. Coloring the word, making it interactive, showing a tooltip, jumping to a codex entry... that's all up to your game.
+
+A keyword can carry an id which DML treats as an opaque string and hands back to you untouched. It's up to your game to resolve what it means.
+
+```c#
+//"house" is a keyword whose id is "123"
+var text = "A <keyword=123>house</keyword> on a hill.";
+```
+
+The id is what makes keywords useful beyond mere coloring : you can use it to look up the right color or style without hardcoding it in every string, to resolve localized or pluralized variants, to attach a click handler, and so on.
+
+When you don't provide an id, it defaults to the text itself. This is handy when the displayed word is already a good enough key.
+
+```c#
+//"house" is a keyword whose id is also "house"
+var text = "A <keyword>house</keyword> on a hill.";
+```
+
+Each piece of deserialized text exposes a `Keyword` property holding that id (or `null` when the text isn't a keyword.) Keywords are independent from the other tags, so the same span can be a keyword *and* be colored, highlighted or styled at the same time.
+
+```c#
+//"golden house" is keyword "42" and is also colored gold
+var text = "A <keyword=42><color red=255 green=200 blue=0>golden house</color></keyword> here.";
+```
+
+Like every other tag, nested keywords follow the inner-takes-precedence rule : within a nested keyword, the innermost id wins for that span and the outer id resumes afterwards.
 
 More support is coming for animations at a later date once proper standards (tag names, properties, animation types, etc...) have been defined.
 
