@@ -84,7 +84,7 @@ public class DmlConverterTest
             }).CreateMany());
 
             var expectedColor = Dummy.Create<Color>();
-            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(new MarkupTag { Name = DmlTags.Color, Value = "Second", Kind = TagKind.Opening })).Returns(expectedColor);
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(new MarkupTag { Name = DmlTags.Color, Value = "Second", Kind = TagKind.Opening })).Returns(new DmlColor { Color = expectedColor });
 
             //Act
             var result = Instance.Convert(metaStrings);
@@ -108,7 +108,7 @@ public class DmlConverterTest
             }).CreateMany());
 
             var expectedHighlight = Dummy.Create<Color>();
-            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(new MarkupTag { Name = DmlTags.Highlight, Value = "Second", Kind = TagKind.Opening })).Returns(expectedHighlight);
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(new MarkupTag { Name = DmlTags.Highlight, Value = "Second", Kind = TagKind.Opening })).Returns(new DmlColor { Color = expectedHighlight });
 
             //Act
             var result = Instance.Convert(metaStrings);
@@ -154,9 +154,9 @@ public class DmlConverterTest
             });
 
             var colors = Dummy.Create<List<Color>>();
-            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaStrings[0].Tags.Single())).Returns(colors[0]);
-            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaStrings[1].Tags.Single())).Returns(colors[1]);
-            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaStrings[2].Tags.Single())).Returns(colors[2]);
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaStrings[0].Tags.Single())).Returns(new DmlColor { Color = colors[0] });
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaStrings[1].Tags.Single())).Returns(new DmlColor { Color = colors[1] });
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaStrings[2].Tags.Single())).Returns(new DmlColor { Color = colors[2] });
 
             //Act
             var result = Instance.Convert(metaStrings);
@@ -213,9 +213,9 @@ public class DmlConverterTest
             });
 
             var highlights = Dummy.Create<List<Color>>();
-            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaStrings[0].Tags.Single())).Returns(highlights[0]);
-            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaStrings[1].Tags.Single())).Returns(highlights[1]);
-            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaStrings[2].Tags.Single())).Returns(highlights[2]);
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaStrings[0].Tags.Single())).Returns(new DmlColor { Color = highlights[0] });
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaStrings[1].Tags.Single())).Returns(new DmlColor { Color = highlights[1] });
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaStrings[2].Tags.Single())).Returns(new DmlColor { Color = highlights[2] });
 
             //Act
             var result = Instance.Convert(metaStrings);
@@ -303,7 +303,7 @@ public class DmlConverterTest
             };
 
             var expectedColor = Dummy.Create<Color>();
-            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(new MarkupTag { Name = DmlTags.Color, Value = "Second", Kind = TagKind.Opening })).Returns(expectedColor);
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(new MarkupTag { Name = DmlTags.Color, Value = "Second", Kind = TagKind.Opening })).Returns(new DmlColor { Color = expectedColor });
 
             //Act
             var result = Instance.Convert(metaString);
@@ -330,7 +330,7 @@ public class DmlConverterTest
             };
 
             var color = Dummy.Create<Color>();
-            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaString.Tags.Single())).Returns(color);
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaString.Tags.Single())).Returns(new DmlColor { Color = color });
 
             //Act
             var result = Instance.Convert(metaString);
@@ -340,6 +340,56 @@ public class DmlConverterTest
             {
                 Text = metaString.Text,
                 Color = color
+            });
+        }
+
+        [TestMethod]
+        public void WhenColorTagIsNamedColor_SetColorName()
+        {
+            //Arrange
+            var colorTag = Dummy.Build<MarkupTag>().With(x => x.Name, DmlTags.Color).Create();
+            var metaString = new MetaString
+            {
+                Text = Dummy.Create<string>(),
+                Tags = new List<MarkupTag> { colorTag }
+            };
+
+            var name = Dummy.Create<string>();
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(colorTag)).Returns(new DmlColor { Name = name });
+
+            //Act
+            var result = Instance.Convert(metaString);
+
+            //Assert
+            result.Should().BeEquivalentTo(new DmlSubstring
+            {
+                Text = metaString.Text,
+                ColorName = name
+            });
+        }
+
+        [TestMethod]
+        public void WhenHighlightTagIsNamedColor_SetHighlightName()
+        {
+            //Arrange
+            var highlightTag = Dummy.Build<MarkupTag>().With(x => x.Name, DmlTags.Highlight).Create();
+            var metaString = new MetaString
+            {
+                Text = Dummy.Create<string>(),
+                Tags = new List<MarkupTag> { highlightTag }
+            };
+
+            var name = Dummy.Create<string>();
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(highlightTag)).Returns(new DmlColor { Name = name });
+
+            //Act
+            var result = Instance.Convert(metaString);
+
+            //Assert
+            result.Should().BeEquivalentTo(new DmlSubstring
+            {
+                Text = metaString.Text,
+                HighlightName = name
             });
         }
 
@@ -467,7 +517,7 @@ public class DmlConverterTest
             };
 
             var color = Dummy.Create<Color>();
-            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(colorTag)).Returns(color);
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(colorTag)).Returns(new DmlColor { Color = color });
 
             //Act
             var result = Instance.Convert(metaString);

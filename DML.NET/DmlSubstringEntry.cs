@@ -6,7 +6,9 @@ public sealed record DmlSubstringEntry
 
     public string Text => _substring.Text;
     public Color? Color => _substring.Color;
+    public string? ColorName => _substring.ColorName;
     public Color? Highlight => _substring.Highlight;
+    public string? HighlightName => _substring.HighlightName;
     public string? Keyword => _substring.Keyword;
     public int Length => _substring.Length;
     public IReadOnlyList<TextStyle> Styles => _substring.Styles;

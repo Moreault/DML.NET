@@ -102,6 +102,60 @@ public class DmlSerializerIntegrationTest
     }
 
     [TestMethod]
+    public void WhenTextHasHexColorTag_ConvertColor()
+    {
+        //Arrange
+        var serializer = CreateSerializer();
+
+        //Act
+        var result = serializer.Deserialize("a <color=#FF0000>red</color> b");
+
+        //Assert
+        result.Should().BeEquivalentTo(new List<DmlSubstring>
+        {
+            new() { Text = "a " },
+            new() { Text = "red", Color = Color.FromHtml("#FF0000") },
+            new() { Text = " b" }
+        }.ToDmlString());
+    }
+
+    [TestMethod]
+    public void WhenTextHasNamedColorTag_SetColorName()
+    {
+        //Arrange
+        var serializer = CreateSerializer();
+
+        //Act
+        var result = serializer.Deserialize("a <color=crimson>red</color> b");
+
+        //Assert
+        result.Should().BeEquivalentTo(new List<DmlSubstring>
+        {
+            new() { Text = "a " },
+            new() { Text = "red", ColorName = "crimson" },
+            new() { Text = " b" }
+        }.ToDmlString());
+    }
+
+    [TestMethod]
+    public void WhenTextHasNamedHighlightTag_SetHighlightName()
+    {
+        //Arrange
+        var serializer = CreateSerializer();
+
+        //Act
+        var result = serializer.Deserialize("a <highlight=danger>warn</highlight> b");
+
+        //Assert
+        result.Should().BeEquivalentTo(new List<DmlSubstring>
+        {
+            new() { Text = "a " },
+            new() { Text = "warn", HighlightName = "danger" },
+            new() { Text = " b" }
+        }.ToDmlString());
+    }
+
+    [TestMethod]
     public void WhenTextHasHighlightTag_ConvertHighlight()
     {
         //Arrange

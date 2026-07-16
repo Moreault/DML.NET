@@ -42,6 +42,37 @@ public class StringExtensionsTester
     }
 
     [TestClass]
+    public class Color_Name : Tester
+    {
+        [TestMethod]
+        public void WhenNameIsProvided_SurroundStringWithColorAndName()
+        {
+            //Arrange
+            var value = Dummy.Create<string>();
+            var name = Dummy.Create<string>();
+
+            //Act
+            var result = value.Color(name);
+
+            //Assert
+            result.Should().Be($"<color={name}>{value}</color>");
+        }
+
+        [TestMethod]
+        public void WhenNameIsNullOrBlank_Throw()
+        {
+            //Arrange
+            var value = Dummy.Create<string>();
+
+            //Act
+            var action = () => value.Color(" ");
+
+            //Assert
+            action.Should().Throw<ArgumentException>().WithParameterName("name");
+        }
+    }
+
+    [TestClass]
     public class Highlight_Rbg : Tester
     {
         [TestMethod]
@@ -76,6 +107,37 @@ public class StringExtensionsTester
 
             //Assert
             result.Should().Be($"<highlight red={color.Red} green={color.Green} blue={color.Blue} alpha={color.Alpha}>{value}</highlight>");
+        }
+    }
+
+    [TestClass]
+    public class Highlight_Name : Tester
+    {
+        [TestMethod]
+        public void WhenNameIsProvided_SurroundStringWithHighlightAndName()
+        {
+            //Arrange
+            var value = Dummy.Create<string>();
+            var name = Dummy.Create<string>();
+
+            //Act
+            var result = value.Highlight(name);
+
+            //Assert
+            result.Should().Be($"<highlight={name}>{value}</highlight>");
+        }
+
+        [TestMethod]
+        public void WhenNameIsNullOrBlank_Throw()
+        {
+            //Arrange
+            var value = Dummy.Create<string>();
+
+            //Act
+            var action = () => value.Highlight(" ");
+
+            //Assert
+            action.Should().Throw<ArgumentException>().WithParameterName("name");
         }
     }
 

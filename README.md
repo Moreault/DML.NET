@@ -48,7 +48,7 @@ You can use the sample project provided in the solution to test out your use cas
 ## Supported tags
 
 Currently, DML only supports the following tags : 
-* Color (both HTML-style hex and RGB- obviously not in the same tag)
+* Color (HTML-style hex, RGB(A) attributes or a named color- obviously not several at once)
 * Highlight (sometimes also known as background color, its syntax is the same as the color's)
 * Bold
 * Italic
@@ -90,6 +90,41 @@ var text = "I cannot emphasize this enough; <highlight red=255 blue=255><color r
 ```
 
 Of course, the above will only be true if your output even supports bold-italic text. If not, then it would be up to you to decide which one takes precedence.
+
+### Color
+
+A color (and its twin `highlight`, which sets the background) can be expressed three ways :
+
+```c#
+//RGB(A) attributes (alpha is optional and defaults to 255)
+var text = "<color red=255 green=0 blue=0>red text</color>";
+
+//HTML-style hex code, as the tag's value (the leading # is required)
+var text = "<color=#FF0000>red text</color>";
+
+//a named color, as the tag's value
+var text = "<color=crimson>red text</color>";
+```
+
+These forms are mutually exclusive within a single tag : you can't mix a value with RGBA attributes.
+
+Named colors work exactly like keyword ids : DML treats the name as an opaque string and hands it back to you untouched. It does **not** know what `crimson` looks like- resolving a name into an actual color is your game's responsibility. This lets you write readable DML in your dialog strings without copy-pasting hex codes everywhere.
+
+When a named color is used, the deserialized substring exposes it through `ColorName` (and `HighlightName` for highlights) rather than `Color`/`Highlight`, which stay `null`. Conversely, hex and RGBA colors populate `Color`/`Highlight` and leave the name properties `null`.
+
+```c#
+//"danger" is a named color; ColorName = "danger" and Color = null
+var dml = _dmlSerializer.Deserialize("This is <color=danger>bad</color>.");
+```
+
+The `#` prefix is what tells the two apart : anything starting with `#` is parsed as a hex code (and validated as one), anything else is treated as a name. This is deliberate- it means a word that also happens to be a valid hex string (ex: `facade`, `decade`) is unambiguously a name, never a color. A name must start with a letter and may otherwise contain letters, digits, hyphens and underscores.
+
+You can build these strings with the `Color`/`Highlight` extension methods, which now accept a name (or a hex code) :
+
+```c#
+var text = "red text".Color("crimson");   //<color=crimson>red text</color>
+var text = "red text".Color("#FF0000");   //<color=#FF0000>red text</color>
+```
 
 ### Keyword
 

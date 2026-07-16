@@ -8,11 +8,21 @@ public static class StringExtensions
     public static string Color(this string value, byte red, byte green, byte blue, byte alpha = byte.MaxValue) => value.Color(new Color(red, green, blue, alpha));
 
     /// <summary>
-    /// Surrounds the string with the 'color' DML tag 
+    /// Surrounds the string with the 'color' DML tag
     /// </summary>
     public static string Color(this string value, Color color)
     {
         return $"<{DmlTags.Color} red={color.Red} green={color.Green} blue={color.Blue} alpha={color.Alpha}>{value}</{DmlTags.Color}>";
+    }
+
+    /// <summary>
+    /// Surrounds the string with the 'color' DML tag using a named color (ex: "crimson".) DML does not resolve the
+    /// name : it is handed back to the consuming application untouched. A hex code (prefixed with '#') is also accepted.
+    /// </summary>
+    public static string Color(this string value, string name)
+    {
+        if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException($"'{nameof(name)}' cannot be null or blank.", nameof(name));
+        return $"<{DmlTags.Color}={name}>{value}</{DmlTags.Color}>";
     }
 
     /// <summary>
@@ -21,11 +31,21 @@ public static class StringExtensions
     public static string Highlight(this string value, byte red, byte green, byte blue, byte alpha = byte.MaxValue) => value.Highlight(new Color(red, green, blue, alpha));
 
     /// <summary>
-    /// Surrounds the string with the 'highlight' DML tag 
+    /// Surrounds the string with the 'highlight' DML tag
     /// </summary>
     public static string Highlight(this string value, Color color)
     {
         return $"<{DmlTags.Highlight} red={color.Red} green={color.Green} blue={color.Blue} alpha={color.Alpha}>{value}</{DmlTags.Highlight}>";
+    }
+
+    /// <summary>
+    /// Surrounds the string with the 'highlight' DML tag using a named color (ex: "crimson".) DML does not resolve the
+    /// name : it is handed back to the consuming application untouched. A hex code (prefixed with '#') is also accepted.
+    /// </summary>
+    public static string Highlight(this string value, string name)
+    {
+        if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException($"'{nameof(name)}' cannot be null or blank.", nameof(name));
+        return $"<{DmlTags.Highlight}={name}>{value}</{DmlTags.Highlight}>";
     }
 
     /// <summary>

@@ -54,10 +54,15 @@ public class DmlColorTagConverterTest
         [TestMethod]
         [DataRow(DmlTags.Color)]
         [DataRow(DmlTags.Highlight)]
-        public void WhenTagContainsValueThatIsNotHexCode_Throw(string colorTag)
+        public void WhenTagValueStartsWithHashButIsNotValidHex_Throw(string colorTag)
         {
             //Arrange
-            var tag = Dummy.Build<MarkupTag>().With(x => x.Name, colorTag).Create();
+            var tag = new MarkupTag
+            {
+                Name = colorTag,
+                Value = "#GGGGGG",
+                Kind = Dummy.Create<TagKind>()
+            };
 
             //Act
             Action action = () => Instance.Convert(tag);
@@ -65,11 +70,31 @@ public class DmlColorTagConverterTest
             //Assert
             action.Should().Throw<Exception>().WithMessage($"Can't convert {nameof(MarkupTag)} to {nameof(Color)} : {tag.Value} is not in a valid hex color format.");
         }
-        //TODO add Fixture extension to create random hex color codes
+
         [TestMethod]
         [DataRow(DmlTags.Color)]
         [DataRow(DmlTags.Highlight)]
-        public void WhenTagHasBothHexCodeValueAndColorAttributes_Throw(string colorTag)
+        public void WhenTagValueIsNotAValidColorName_Throw(string colorTag)
+        {
+            //Arrange
+            var tag = new MarkupTag
+            {
+                Name = colorTag,
+                Value = "not a name!",
+                Kind = Dummy.Create<TagKind>()
+            };
+
+            //Act
+            Action action = () => Instance.Convert(tag);
+
+            //Assert
+            action.Should().Throw<Exception>().WithMessage($"Can't convert {nameof(MarkupTag)} to {nameof(Color)} : {tag.Value} is not a valid color name.");
+        }
+
+        [TestMethod]
+        [DataRow(DmlTags.Color)]
+        [DataRow(DmlTags.Highlight)]
+        public void WhenTagHasBothValueAndColorAttributes_Throw(string colorTag)
         {
             //Arrange
             var tag = new MarkupTag
@@ -91,7 +116,7 @@ public class DmlColorTagConverterTest
             Action action = () => Instance.Convert(tag);
 
             //Assert
-            action.Should().Throw<Exception>().WithMessage($"Can't convert {nameof(MarkupTag)} to {nameof(Color)} : tag '{tag}' has both a hex code and RGBA values but must have only one or the other.");
+            action.Should().Throw<Exception>().WithMessage($"Can't convert {nameof(MarkupTag)} to {nameof(Color)} : tag '{tag}' has both a color value and RGBA attributes but must have only one or the other.");
         }
 
         [TestMethod]
@@ -113,7 +138,27 @@ public class DmlColorTagConverterTest
             var result = Instance.Convert(tag);
 
             //Assert
-            result.Should().BeEquivalentTo(Color.FromHtml(hex));
+            result.Should().BeEquivalentTo(new DmlColor { Color = Color.FromHtml(hex) });
+        }
+
+        [TestMethod]
+        [DataRow(DmlTags.Color)]
+        [DataRow(DmlTags.Highlight)]
+        public void WhenTagIsNamedColor_ReturnName(string colorTag)
+        {
+            //Arrange
+            var tag = new MarkupTag
+            {
+                Name = colorTag,
+                Value = "crimson",
+                Kind = Dummy.Create<TagKind>()
+            };
+
+            //Act
+            var result = Instance.Convert(tag);
+
+            //Assert
+            result.Should().BeEquivalentTo(new DmlColor { Name = "crimson" });
         }
 
         [TestMethod]
@@ -219,7 +264,7 @@ public class DmlColorTagConverterTest
             var result = Instance.Convert(tag);
 
             //Assert
-            result.Should().Be(color);
+            result.Color.Should().Be(color);
         }
 
         [TestMethod]
@@ -246,7 +291,7 @@ public class DmlColorTagConverterTest
             var result = Instance.Convert(tag);
 
             //Assert
-            result.Should().Be(color);
+            result.Color.Should().Be(color);
         }
 
         [TestMethod]
@@ -271,7 +316,7 @@ public class DmlColorTagConverterTest
             var result = Instance.Convert(tag);
 
             //Assert
-            result.Should().Be(new Color(red, (byte)0, (byte)0));
+            result.Color.Should().Be(new Color(red, (byte)0, (byte)0));
         }
 
         [TestMethod]
@@ -296,7 +341,7 @@ public class DmlColorTagConverterTest
             var result = Instance.Convert(tag);
 
             //Assert
-            result.Should().Be(new Color((byte)0, green, (byte)0));
+            result.Color.Should().Be(new Color((byte)0, green, (byte)0));
         }
 
         [TestMethod]
@@ -321,7 +366,7 @@ public class DmlColorTagConverterTest
             var result = Instance.Convert(tag);
 
             //Assert
-            result.Should().Be(new Color((byte)0, (byte)0, blue));
+            result.Color.Should().Be(new Color((byte)0, (byte)0, blue));
         }
 
         [TestMethod]
@@ -346,7 +391,7 @@ public class DmlColorTagConverterTest
             var result = Instance.Convert(tag);
 
             //Assert
-            result.Should().Be(new Color((byte)0, (byte)0, (byte)0, alpha));
+            result.Color.Should().Be(new Color((byte)0, (byte)0, (byte)0, alpha));
         }
     }
 }

@@ -32,11 +32,16 @@ public sealed class DmlConverter : IDmlConverter
         var highlightTag = metaString.Tags.LastOrDefault(x => string.Equals(x.Name, DmlTags.Highlight, StringComparison.InvariantCultureIgnoreCase));
         var keywordTag = metaString.Tags.LastOrDefault(x => string.Equals(x.Name, DmlTags.Keyword, StringComparison.InvariantCultureIgnoreCase));
 
+        var color = colorTag == null ? null : _dmlColorTagConverter.Convert(colorTag);
+        var highlight = highlightTag == null ? null : _dmlColorTagConverter.Convert(highlightTag);
+
         return new DmlSubstring
         {
             Text = metaString.Text,
-            Color = colorTag == null ? null : _dmlColorTagConverter.Convert(colorTag),
-            Highlight = highlightTag == null ? null : _dmlColorTagConverter.Convert(highlightTag),
+            Color = color?.Color,
+            ColorName = color?.Name,
+            Highlight = highlight?.Color,
+            HighlightName = highlight?.Name,
             Keyword = keywordTag == null ? null : string.IsNullOrWhiteSpace(keywordTag.Value) ? metaString.Text : keywordTag.Value,
             Styles = _dmlTextStyleConverter.Convert(metaString)
         };
