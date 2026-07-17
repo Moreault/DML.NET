@@ -10,6 +10,9 @@ public sealed record DmlSubstringEntry
     public Color? Highlight => _substring.Highlight;
     public string? HighlightName => _substring.HighlightName;
     public string? Keyword => _substring.Keyword;
+    public bool IsProfanity => _substring.IsProfanity;
+    public ProfanityLevel? ProfanityLevel => _substring.ProfanityLevel;
+    public string? Clean => _substring.Clean;
     public int Length => _substring.Length;
     public IReadOnlyList<TextStyle> Styles => _substring.Styles;
 

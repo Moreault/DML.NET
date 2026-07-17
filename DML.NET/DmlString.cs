@@ -46,18 +46,17 @@ public sealed class DmlString : IReadOnlyList<DmlSubstringEntry>, IEquatable<Dml
         var newStrings = new List<DmlSubstring>();
 
         if (start.Outer == end.Outer)
+        {
+            DmlSubstring only = _items[start.Outer];
             return new List<DmlSubstring>
             {
-                new()
-                {
-                    Text = _items[start.Outer].Text.Substring(start.Inner, end.Inner - start.Inner),
-                    Color = _items[start.Outer].Color
-                }
+                only with { Text = only.Text.Substring(start.Inner, end.Inner - start.Inner) }
             }.ToDmlString();
+        }
 
         for (var i = start.Outer; i <= end.Outer; i++)
         {
-            var item = _items[i];
+            DmlSubstring item = _items[i];
 
             if (i > start.Outer && i < end.Outer)
             {
@@ -65,19 +64,11 @@ public sealed class DmlString : IReadOnlyList<DmlSubstringEntry>, IEquatable<Dml
             }
             else if (i == start.Outer)
             {
-                newStrings.Add(new DmlSubstring
-                {
-                    Text = item.Text[start.Inner..],
-                    Color = item.Color
-                });
+                newStrings.Add(item with { Text = item.Text[start.Inner..] });
             }
             else if (i == end.Outer)
             {
-                newStrings.Add(new DmlSubstring
-                {
-                    Text = item.Text[..end.Inner],
-                    Color = item.Color
-                });
+                newStrings.Add(item with { Text = item.Text[..end.Inner] });
             }
         }
 

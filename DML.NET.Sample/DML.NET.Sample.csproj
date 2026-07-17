@@ -9,12 +9,17 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 		<PackageReference Include="ToolBX.AssemblyInitializer.Console" Version="4.0.0-beta.1" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\DML.NET\DML.NET.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="appsettings.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 
 	<ItemGroup>

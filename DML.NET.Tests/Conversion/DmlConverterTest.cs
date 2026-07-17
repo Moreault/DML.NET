@@ -6,6 +6,7 @@ public abstract class DmlConverterTesterBase : Tester<DmlConverter>
     {
         base.InitializeTest();
         GetMock<IDmlTextStyleConverter>().Setup(x => x.Convert(It.IsAny<MetaString>())).Returns(new List<TextStyle>());
+        GetMock<IDmlProfanityTagConverter>().Setup(x => x.Convert(It.IsAny<MarkupTag>(), It.IsAny<string>())).Returns(new DmlProfanity());
     }
 }
 
@@ -528,6 +529,74 @@ public class DmlConverterTest
                 Text = metaString.Text,
                 Color = color,
                 Keyword = id
+            });
+        }
+
+        [TestMethod]
+        public void WhenThereIsNoProfanityTag_IsNotProfanity()
+        {
+            //Arrange
+            var metaString = Dummy.Build<MetaString>().Omit(x => x.Tags).Create();
+
+            //Act
+            var result = Instance.Convert(metaString);
+
+            //Assert
+            result.Should().BeEquivalentTo(new DmlSubstring { Text = metaString.Text });
+        }
+
+        [TestMethod]
+        public void WhenThereIsProfanityTag_DelegateToConverterAndSetProperties()
+        {
+            //Arrange
+            var profanityTag = new MarkupTag { Name = DmlTags.Profanity, Kind = TagKind.Opening };
+            var metaString = new MetaString
+            {
+                Text = Dummy.Create<string>(),
+                Tags = new List<MarkupTag> { profanityTag }
+            };
+
+            var profanity = Dummy.Create<DmlProfanity>();
+            GetMock<IDmlProfanityTagConverter>().Setup(x => x.Convert(profanityTag, metaString.Text)).Returns(profanity);
+
+            //Act
+            var result = Instance.Convert(metaString);
+
+            //Assert
+            result.Should().BeEquivalentTo(new DmlSubstring
+            {
+                Text = metaString.Text,
+                IsProfanity = true,
+                ProfanityLevel = profanity.Level,
+                Clean = profanity.Clean
+            });
+        }
+
+        [TestMethod]
+        public void WhenProfanityTagNestedInsideAnotherProfanityTag_UseLastProfanityTag()
+        {
+            //Arrange
+            var first = new MarkupTag { Name = DmlTags.Profanity, Value = "First", Kind = TagKind.Opening };
+            var second = new MarkupTag { Name = DmlTags.Profanity, Value = "Second", Kind = TagKind.Opening };
+            var metaString = new MetaString
+            {
+                Text = Dummy.Create<string>(),
+                Tags = new List<MarkupTag> { first, second }
+            };
+
+            var profanity = Dummy.Create<DmlProfanity>();
+            GetMock<IDmlProfanityTagConverter>().Setup(x => x.Convert(second, metaString.Text)).Returns(profanity);
+
+            //Act
+            var result = Instance.Convert(metaString);
+
+            //Assert
+            result.Should().BeEquivalentTo(new DmlSubstring
+            {
+                Text = metaString.Text,
+                IsProfanity = true,
+                ProfanityLevel = profanity.Level,
+                Clean = profanity.Clean
             });
         }
     }

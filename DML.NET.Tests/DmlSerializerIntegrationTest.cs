@@ -13,6 +13,9 @@ public class DmlSerializerIntegrationTest
     private static IDmlSerializer CreateSerializer() =>
         new ServiceCollection().AddDml().BuildServiceProvider().GetRequiredService<IDmlSerializer>();
 
+    private static IDmlSerializer CreateSerializer(DmlOptions options) =>
+        new ServiceCollection().AddDml(options).BuildServiceProvider().GetRequiredService<IDmlSerializer>();
+
     [TestMethod]
     public void WhenTextHasNoTags_ReturnSingleUnstyledSubstring()
     {
@@ -206,6 +209,115 @@ public class DmlSerializerIntegrationTest
             new() { Text = "A " },
             new() { Text = "golden house", Keyword = "42", Color = new Color(255, 200, 0) },
             new() { Text = " here" }
+        }.ToDmlString());
+    }
+
+    [TestMethod]
+    public void WhenProfanityHasNoAttributes_UseDefaultsAndInventNothing()
+    {
+        //Arrange
+        var serializer = CreateSerializer();
+
+        //Act
+        var result = serializer.Deserialize("That <profanity>damn</profanity> kid");
+
+        //Assert : out of the box the level defaults to Strong but the clean fallback is DoNothing, so DML invents
+        //nothing. The span is still flagged as profanity via IsProfanity.
+        result.Should().BeEquivalentTo(new List<DmlSubstring>
+        {
+            new() { Text = "That " },
+            new() { Text = "damn", IsProfanity = true, ProfanityLevel = ProfanityLevel.Strong, Clean = null },
+            new() { Text = " kid" }
+        }.ToDmlString());
+    }
+
+    [TestMethod]
+    public void WhenFallbackIsGrawlix_MaskWithLengthMatchedGrawlix()
+    {
+        //Arrange
+        var serializer = CreateSerializer(new DmlOptions { CleanFallback = CleanFallback.Grawlix });
+
+        //Act
+        var result = serializer.Deserialize("That <profanity>damn</profanity> kid");
+
+        //Assert : the exact symbols aren't asserted here (that's covered in the converter's unit tests) - only that
+        //a length-matched mask was produced.
+        result.Count.Should().Be(3);
+        var profanity = result[1];
+        profanity.Text.Should().Be("damn");
+        profanity.IsProfanity.Should().BeTrue();
+        profanity.Clean!.Should().HaveLength(4);
+    }
+
+    [TestMethod]
+    public void WhenProfanityHasLevelAndClean_UseThem()
+    {
+        //Arrange
+        var serializer = CreateSerializer();
+
+        //Act
+        var result = serializer.Deserialize("That <profanity level=severe clean=\"gosh darn\">goddamn</profanity> kid");
+
+        //Assert
+        result.Should().BeEquivalentTo(new List<DmlSubstring>
+        {
+            new() { Text = "That " },
+            new() { Text = "goddamn", IsProfanity = true, ProfanityLevel = ProfanityLevel.Severe, Clean = "gosh darn" },
+            new() { Text = " kid" }
+        }.ToDmlString());
+    }
+
+    [TestMethod]
+    public void WhenFallbackIsAsterisks_MaskWithAsterisks()
+    {
+        //Arrange
+        var serializer = CreateSerializer(new DmlOptions { CleanFallback = CleanFallback.Asterisks });
+
+        //Act
+        var result = serializer.Deserialize("That <profanity>damn</profanity> kid");
+
+        //Assert
+        result.Should().BeEquivalentTo(new List<DmlSubstring>
+        {
+            new() { Text = "That " },
+            new() { Text = "damn", IsProfanity = true, ProfanityLevel = ProfanityLevel.Strong, Clean = "****" },
+            new() { Text = " kid" }
+        }.ToDmlString());
+    }
+
+    [TestMethod]
+    public void WhenFallbackIsDoNothingAndDefaultLevelIsNull_ReportProfanityWithoutLevelOrClean()
+    {
+        //Arrange
+        var serializer = CreateSerializer(new DmlOptions { CleanFallback = CleanFallback.DoNothing, DefaultProfanityLevel = null });
+
+        //Act
+        var result = serializer.Deserialize("That <profanity>damn</profanity> kid");
+
+        //Assert : null level must NOT be read as "not profanity" - IsProfanity still guards it.
+        result.Should().BeEquivalentTo(new List<DmlSubstring>
+        {
+            new() { Text = "That " },
+            new() { Text = "damn", IsProfanity = true, ProfanityLevel = null, Clean = null },
+            new() { Text = " kid" }
+        }.ToDmlString());
+    }
+
+    [TestMethod]
+    public void WhenProfanityWrapsColorTag_SetBothOnTheInnerSpan()
+    {
+        //Arrange
+        var serializer = CreateSerializer(new DmlOptions { CleanFallback = CleanFallback.Asterisks });
+
+        //Act
+        var result = serializer.Deserialize("You <profanity level=mild><color=red>heck</color></profanity> off");
+
+        //Assert
+        result.Should().BeEquivalentTo(new List<DmlSubstring>
+        {
+            new() { Text = "You " },
+            new() { Text = "heck", IsProfanity = true, ProfanityLevel = ProfanityLevel.Mild, Clean = "****", ColorName = "red" },
+            new() { Text = " off" }
         }.ToDmlString());
     }
 }

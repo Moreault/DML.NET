@@ -64,6 +64,29 @@ public static class StringExtensions
     }
 
     /// <summary>
+    /// Surrounds the string with the 'profanity' DML tag. The level defaults to <see cref="DmlOptions.DefaultProfanityLevel"/>
+    /// and, when deserialized, its clean alternative is produced according to <see cref="DmlOptions.CleanFallback"/>.
+    /// </summary>
+    public static string Profanity(this string value) => $"<{DmlTags.Profanity}>{value}</{DmlTags.Profanity}>";
+
+    /// <summary>
+    /// Surrounds the string with the 'profanity' DML tag using an explicit level.
+    /// </summary>
+    public static string Profanity(this string value, ProfanityLevel level) =>
+        $"<{DmlTags.Profanity} {DmlTags.Level}={level.ToString().ToLowerInvariant()}>{value}</{DmlTags.Profanity}>";
+
+    /// <summary>
+    /// Surrounds the string with the 'profanity' DML tag using an explicit level and a clean alternative to display
+    /// in place of the profanity. A null or blank clean alternative is omitted, in which case it falls back to
+    /// <see cref="DmlOptions.CleanFallback"/> when deserialized.
+    /// </summary>
+    public static string Profanity(this string value, ProfanityLevel level, string clean)
+    {
+        if (string.IsNullOrWhiteSpace(clean)) return value.Profanity(level);
+        return $"<{DmlTags.Profanity} {DmlTags.Level}={level.ToString().ToLowerInvariant()} {DmlTags.Clean}=\"{clean}\">{value}</{DmlTags.Profanity}>";
+    }
+
+    /// <summary>
     /// Surrounds the string with a DML text style tag
     /// </summary>
     public static string Style(this string value, TextStyle style)

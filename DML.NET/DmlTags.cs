@@ -13,4 +13,7 @@ internal static class DmlTags
     public const string Underline = "underline";
     public const string Strikeout = "strikeout";
     public const string Keyword = "keyword";
+    public const string Profanity = "profanity";
+    public const string Level = "level";
+    public const string Clean = "clean";
 }

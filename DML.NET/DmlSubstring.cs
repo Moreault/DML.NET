@@ -40,6 +40,28 @@ public sealed record DmlSubstring
     public string? Keyword { get; init; }
 
     /// <summary>
+    /// Whether this text was marked as profanity with a <c>&lt;profanity&gt;</c> tag. This is the definitive signal
+    /// to check when deciding whether to censor : it is <c>true</c> for any profanity span regardless of
+    /// <see cref="ProfanityLevel"/> (which may be <c>null</c>.)
+    /// </summary>
+    public bool IsProfanity { get; init; }
+
+    /// <summary>
+    /// Severity of the profanity when <see cref="IsProfanity"/> is <c>true</c>, or <c>null</c> when the text isn't
+    /// profanity or when no level was assigned (see <see cref="DmlOptions.DefaultProfanityLevel"/>.) DML does not
+    /// interpret this value : it is up to the consuming application to decide what each level means.
+    /// </summary>
+    public ProfanityLevel? ProfanityLevel { get; init; }
+
+    /// <summary>
+    /// Text to display in place of the profanity when <see cref="IsProfanity"/> is <c>true</c>. Holds the
+    /// <c>clean</c> attribute when the author supplied one, otherwise the value produced by
+    /// <see cref="DmlOptions.CleanFallback"/> (a grawlix by default.) <c>null</c> when the text isn't profanity or
+    /// when the fallback is <see cref="CleanFallback.DoNothing"/> and no <c>clean</c> attribute was provided.
+    /// </summary>
+    public string? Clean { get; init; }
+
+    /// <summary>
     /// Number of characters in the string (excluding DML tags.)
     /// </summary>
     public int Length => Text.Length;

@@ -82,5 +82,14 @@ namespace ToolBX.DML.NET.Resources {
                 return ResourceManager.GetString("CannotDeserializeDmlBecauseDuplicateTextStyle", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Can&apos;t convert tag to profanity : &apos;{0}&apos; is not a valid profanity level (expected &apos;mild&apos;, &apos;strong&apos; or &apos;severe&apos;.).
+        /// </summary>
+        internal static string CannotConvertBecauseInvalidProfanityLevel {
+            get {
+                return ResourceManager.GetString("CannotConvertBecauseInvalidProfanityLevel", resourceCulture);
+            }
+        }
     }
 }

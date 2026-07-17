@@ -55,6 +55,7 @@ Currently, DML only supports the following tags :
 * Underline
 * Strikeout
 * Keyword (marks a span as a meaningful term your game can color, style and/or make clickable)
+* Profanity (marks a span as profanity, with an optional severity level and a clean alternative to display in its place)
 
 All tags are case-insensitive and does not allow duplicates. In other words; the same string fragment cannot be italic twice nor can it define mutliple colors at once.
 
@@ -156,6 +157,83 @@ var text = "A <keyword=42><color red=255 green=200 blue=0>golden house</color></
 Like every other tag, nested keywords follow the inner-takes-precedence rule : within a nested keyword, the innermost id wins for that span and the outer id resumes afterwards.
 
 More support is coming for animations at a later date once proper standards (tag names, properties, animation types, etc...) have been defined.
+
+### Profanity
+
+The profanity tag marks a span of text as profanity. Just like every other tag, DML doesn't *do* anything with it on its own : it reports the span back to you and it's up to your game to decide whether to actually censor it (based on the player's content settings, for example.)
+
+```c#
+//"damn" is flagged as profanity
+var text = "That <profanity>damn</profanity> kid";
+```
+
+Each deserialized substring exposes three properties :
+
+* `IsProfanity` : `true` for any span marked with a profanity tag. **This is the definitive signal to check when deciding whether to censor.**
+* `ProfanityLevel` : the severity, one of `Mild`, `Strong` or `Severe`. It can be `null` (see below), which does *not* mean the span isn't profanity- always rely on `IsProfanity` for that.
+* `Clean` : the text to display in place of the profanity.
+
+Both tag attributes are optional :
+
+```c#
+//an explicit level and a clean alternative to display instead of the word
+var text = "That <profanity level=severe clean=\"gosh darn\">goddamn</profanity> kid";
+```
+
+When `level` is omitted, it defaults to `DmlOptions.DefaultProfanityLevel` (`Strong` out of the box.) A valid level is `mild`, `strong` or `severe` (case-insensitive) ; anything else throws.
+
+When `clean` is omitted, what happens depends on `DmlOptions.CleanFallback` :
+
+* `DoNothing` (the default) : `Clean` is left `null`. DML invents nothing and it's entirely up to you what to show, in keeping with its "only a spec" philosophy.
+* `Grawlix` : a length-matched string of random-looking symbols (ex: `#$@!` for `damn`.) It is **deterministic**- the same word always produces the same grawlix- so deserialization stays repeatable. Whitespace is preserved so word boundaries survive.
+* `Asterisks` : a length-matched string of asterisks (ex: `****`), whitespace preserved.
+
+Like every other tag, profanity is independent from the rest, so the same span can be profanity *and* be colored, highlighted or styled. Nested profanity tags follow the usual inner-takes-precedence rule.
+
+You can build these strings with the `Profanity` extension methods :
+
+```c#
+var text = "damn".Profanity();                                  //<profanity>damn</profanity>
+var text = "damn".Profanity(ProfanityLevel.Severe);             //<profanity level=severe>damn</profanity>
+var text = "goddamn".Profanity(ProfanityLevel.Mild, "gosh darn"); //<profanity level=mild clean="gosh darn">goddamn</profanity>
+```
+
+> **A note on philosophy :** DML is *only a spec*- it hands values back untouched and never invents content. That's why `CleanFallback` defaults to `DoNothing` : out of the box an author-provided `clean` is honoured verbatim and nothing else is generated. The `Grawlix`/`Asterisks` fallbacks are an *opt-in* convenience for when you'd rather DML produce a mask for you.
+
+## Configuration
+
+Some tags are influenced by `DmlOptions`. You never need to configure anything- the defaults below apply out of the box :
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `CleanFallback` | `DoNothing` | What `Clean` is filled with when a profanity tag omits its `clean` attribute. `DoNothing` leaves it `null` (DML invents nothing) ; `Grawlix` and `Asterisks` produce a length-matched mask. |
+| `DefaultProfanityLevel` | `Strong` | The level assigned to a profanity tag that omits its `level` attribute. Set to `null` if you treat all profanity equally and don't want a level assigned. |
+
+The easiest way to change them is to bind them from the `Dml` section of your `appsettings.json` using [AutoConfig](https://github.com/Moreault/AutoConfig) :
+
+```json
+{
+    "Dml": {
+        "cleanFallback": "Asterisks",
+        "defaultProfanityLevel": "Mild"
+    }
+}
+```
+
+```c#
+services.AddDml();
+services.AddAutoConfig(configuration);
+```
+
+Alternatively, configure them in code :
+
+```c#
+services.AddDml(new DmlOptions
+{
+    CleanFallback = CleanFallback.Asterisks,
+    DefaultProfanityLevel = ProfanityLevel.Mild
+});
+```
 
 ## About DML
 

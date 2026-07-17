@@ -1,6 +1,8 @@
 // Global using directives
 
 global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Options;
+global using ToolBX.AutoConfig;
 global using ToolBX.DML.NET.Resources;
 global using ToolBX.ColorFull;
 global using System.Text.RegularExpressions;

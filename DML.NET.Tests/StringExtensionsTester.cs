@@ -190,6 +190,70 @@ public class StringExtensionsTester
     }
 
     [TestClass]
+    public class Profanity_NoArgs : Tester
+    {
+        [TestMethod]
+        public void Always_SurroundStringWithProfanity()
+        {
+            //Arrange
+            var value = Dummy.Create<string>();
+
+            //Act
+            var result = value.Profanity();
+
+            //Assert
+            result.Should().Be($"<profanity>{value}</profanity>");
+        }
+    }
+
+    [TestClass]
+    public class Profanity_Level : Tester
+    {
+        [TestMethod]
+        public void Always_SurroundStringWithProfanityAndLowercaseLevel()
+        {
+            //Arrange
+            var value = Dummy.Create<string>();
+
+            //Act
+            var result = value.Profanity(ProfanityLevel.Severe);
+
+            //Assert
+            result.Should().Be($"<profanity level=severe>{value}</profanity>");
+        }
+    }
+
+    [TestClass]
+    public class Profanity_LevelAndClean : Tester
+    {
+        [TestMethod]
+        public void WhenCleanIsProvided_SurroundStringWithProfanityLevelAndClean()
+        {
+            //Arrange
+            var value = Dummy.Create<string>();
+
+            //Act
+            var result = value.Profanity(ProfanityLevel.Mild, "gosh darn");
+
+            //Assert
+            result.Should().Be($"<profanity level=mild clean=\"gosh darn\">{value}</profanity>");
+        }
+
+        [TestMethod]
+        public void WhenCleanIsNullOrBlank_FallBackToLevelOnlyProfanity()
+        {
+            //Arrange
+            var value = Dummy.Create<string>();
+
+            //Act
+            var result = value.Profanity(ProfanityLevel.Mild, " ");
+
+            //Assert
+            result.Should().Be($"<profanity level=mild>{value}</profanity>");
+        }
+    }
+
+    [TestClass]
     public class Style : Tester
     {
         [TestMethod]
