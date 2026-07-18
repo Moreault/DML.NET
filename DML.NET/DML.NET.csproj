@@ -36,11 +36,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="ToolBX.AutoConfig" Version="4.0.0-beta1" />
-		<PackageReference Include="ToolBX.AutoInject" Version="4.0.0-beta.2" />
-		<PackageReference Include="ToolBX.AwesomeMarkup" Version="4.0.0-beta.1" />
-		<PackageReference Include="ToolBX.ColorFull" Version="4.0.0-beta.1" />
-		<PackageReference Include="ToolBX.EasyTypeParsing" Version="4.0.0-beta.1" />
+		<PackageReference Include="ToolBX.AutoConfig" Version="4.0.0" />
+		<PackageReference Include="ToolBX.AutoInject" Version="4.0.0" />
+		<PackageReference Include="ToolBX.AwesomeMarkup" Version="4.0.0" />
+		<PackageReference Include="ToolBX.ColorFull" Version="4.0.0" />
+		<PackageReference Include="ToolBX.EasyTypeParsing" Version="4.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
