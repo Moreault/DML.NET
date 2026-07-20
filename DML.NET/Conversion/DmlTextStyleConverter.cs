@@ -6,7 +6,7 @@ public interface IDmlTextStyleConverter
 }
 
 [AutoInject(ServiceLifetime.Singleton)]
-public class DmlTextStyleConverter : IDmlTextStyleConverter
+public sealed class DmlTextStyleConverter : IDmlTextStyleConverter
 {
     public IReadOnlyList<TextStyle> Convert(MetaString metaString)
     {

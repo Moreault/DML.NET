@@ -284,6 +284,99 @@ public class DmlStringTest
                 }
             }.ToDmlString());
         }
+
+        [TestMethod]
+        public void WhenSlicingWithinASingleSubstring_PreserveEveryProperty()
+        {
+            //Arrange
+            var dmlString = new List<DmlSubstring>
+            {
+                new()
+                {
+                    Text = "You heckin scoundrel",
+                    Color = Dummy.Create<Color>(),
+                    Highlight = Dummy.Create<Color>(),
+                    Keyword = "insult",
+                    IsProfanity = true,
+                    ProfanityLevel = ProfanityLevel.Mild,
+                    Clean = "gosh dang",
+                    Styles = new List<TextStyle> { TextStyle.Bold }
+                }
+            }.ToDmlString();
+
+            //Act
+            var result = dmlString.Substring(0, 3);
+
+            //Assert
+            result.Should().BeEquivalentTo(new List<DmlSubstring>
+            {
+                new()
+                {
+                    Text = "You",
+                    Color = dmlString[0].Color,
+                    Highlight = dmlString[0].Highlight,
+                    Keyword = "insult",
+                    IsProfanity = true,
+                    ProfanityLevel = ProfanityLevel.Mild,
+                    Clean = "gosh dang",
+                    Styles = new List<TextStyle> { TextStyle.Bold }
+                }
+            }.ToDmlString());
+        }
+
+        [TestMethod]
+        public void WhenSlicingAcrossSubstrings_PreserveEveryPropertyOnEachPiece()
+        {
+            //Arrange
+            var dmlString = new List<DmlSubstring>
+            {
+                new()
+                {
+                    Text = "You are a ",
+                    Keyword = "subject",
+                    Styles = new List<TextStyle> { TextStyle.Italic }
+                },
+                new()
+                {
+                    Text = "heck",
+                    IsProfanity = true,
+                    ProfanityLevel = ProfanityLevel.Severe,
+                    Clean = "****"
+                },
+                new()
+                {
+                    Text = " off",
+                    Color = Dummy.Create<Color>()
+                }
+            }.ToDmlString();
+
+            //Act : from the middle of the first substring ("You are a "), through all of the second ("heck"), into
+            //the third (" off"). Full text is "You are a heck off"; indices 4..15 -> "are a heck o".
+            var result = dmlString.Substring(4, 12);
+
+            //Assert
+            result.Should().BeEquivalentTo(new List<DmlSubstring>
+            {
+                new()
+                {
+                    Text = "are a ",
+                    Keyword = "subject",
+                    Styles = new List<TextStyle> { TextStyle.Italic }
+                },
+                new()
+                {
+                    Text = "heck",
+                    IsProfanity = true,
+                    ProfanityLevel = ProfanityLevel.Severe,
+                    Clean = "****"
+                },
+                new()
+                {
+                    Text = " o",
+                    Color = dmlString[2].Color
+                }
+            }.ToDmlString());
+        }
     }
 
     [TestClass]

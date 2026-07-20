@@ -40,7 +40,7 @@ public void YourMethod()
 }
 ```
 
-You can always assume that a null or empty value for properties such as Color or Styles mean that this part of text should use default values.
+You can always assume that null or empty values for properties such as Color, Styles or Keyword mean that this part of text should use default values (or, in the case of Keyword, that the text isn't a keyword at all.)
 
 ### Sample project
 You can use the sample project provided in the solution to test out your use cases with DML to see if they apply correctly. 
@@ -48,12 +48,14 @@ You can use the sample project provided in the solution to test out your use cas
 ## Supported tags
 
 Currently, DML only supports the following tags : 
-* Color (both HTML-style hex and RGB- obviously not in the same tag)
+* Color (HTML-style hex, RGB(A) attributes or a named color- obviously not several at once)
 * Highlight (sometimes also known as background color, its syntax is the same as the color's)
 * Bold
 * Italic
 * Underline
 * Strikeout
+* Keyword (marks a span as a meaningful term your game can color, style and/or make clickable)
+* Profanity (marks a span as profanity, with an optional severity level and a clean alternative to display in its place)
 
 All tags are case-insensitive and does not allow duplicates. In other words; the same string fragment cannot be italic twice nor can it define mutliple colors at once.
 
@@ -90,7 +92,148 @@ var text = "I cannot emphasize this enough; <highlight red=255 blue=255><color r
 
 Of course, the above will only be true if your output even supports bold-italic text. If not, then it would be up to you to decide which one takes precedence.
 
+### Color
+
+A color (and its twin `highlight`, which sets the background) can be expressed three ways :
+
+```c#
+//RGB(A) attributes (alpha is optional and defaults to 255)
+var text = "<color red=255 green=0 blue=0>red text</color>";
+
+//HTML-style hex code, as the tag's value (the leading # is required)
+var text = "<color=#FF0000>red text</color>";
+
+//a named color, as the tag's value
+var text = "<color=crimson>red text</color>";
+```
+
+These forms are mutually exclusive within a single tag : you can't mix a value with RGBA attributes.
+
+Named colors work exactly like keyword ids : DML treats the name as an opaque string and hands it back to you untouched. It does **not** know what `crimson` looks like- resolving a name into an actual color is your game's responsibility. This lets you write readable DML in your dialog strings without copy-pasting hex codes everywhere.
+
+When a named color is used, the deserialized substring exposes it through `ColorName` (and `HighlightName` for highlights) rather than `Color`/`Highlight`, which stay `null`. Conversely, hex and RGBA colors populate `Color`/`Highlight` and leave the name properties `null`.
+
+```c#
+//"danger" is a named color; ColorName = "danger" and Color = null
+var dml = _dmlSerializer.Deserialize("This is <color=danger>bad</color>.");
+```
+
+The `#` prefix is what tells the two apart : anything starting with `#` is parsed as a hex code (and validated as one), anything else is treated as a name. This is deliberate- it means a word that also happens to be a valid hex string (ex: `facade`, `decade`) is unambiguously a name, never a color. A name must start with a letter and may otherwise contain letters, digits, hyphens and underscores.
+
+You can build these strings with the `Color`/`Highlight` extension methods, which now accept a name (or a hex code) :
+
+```c#
+var text = "red text".Color("crimson");   //<color=crimson>red text</color>
+var text = "red text".Color("#FF0000");   //<color=#FF0000>red text</color>
+```
+
+### Keyword
+
+The keyword tag marks a span of text as a meaningful term- the kind of important word you might see highlighted in dialog and click on to get more information. DML deliberately calls it a "keyword" rather than a "link" because DML is only a spec : it doesn't know (or care) what clicking it does. Coloring the word, making it interactive, showing a tooltip, jumping to a codex entry... that's all up to your game.
+
+A keyword can carry an id which DML treats as an opaque string and hands back to you untouched. It's up to your game to resolve what it means.
+
+```c#
+//"house" is a keyword whose id is "123"
+var text = "A <keyword=123>house</keyword> on a hill.";
+```
+
+The id is what makes keywords useful beyond mere coloring : you can use it to look up the right color or style without hardcoding it in every string, to resolve localized or pluralized variants, to attach a click handler, and so on.
+
+When you don't provide an id, it defaults to the text itself. This is handy when the displayed word is already a good enough key.
+
+```c#
+//"house" is a keyword whose id is also "house"
+var text = "A <keyword>house</keyword> on a hill.";
+```
+
+Each piece of deserialized text exposes a `Keyword` property holding that id (or `null` when the text isn't a keyword.) Keywords are independent from the other tags, so the same span can be a keyword *and* be colored, highlighted or styled at the same time.
+
+```c#
+//"golden house" is keyword "42" and is also colored gold
+var text = "A <keyword=42><color red=255 green=200 blue=0>golden house</color></keyword> here.";
+```
+
+Like every other tag, nested keywords follow the inner-takes-precedence rule : within a nested keyword, the innermost id wins for that span and the outer id resumes afterwards.
+
 More support is coming for animations at a later date once proper standards (tag names, properties, animation types, etc...) have been defined.
+
+### Profanity
+
+The profanity tag marks a span of text as profanity. Just like every other tag, DML doesn't *do* anything with it on its own : it reports the span back to you and it's up to your game to decide whether to actually censor it (based on the player's content settings, for example.)
+
+```c#
+//"damn" is flagged as profanity
+var text = "That <profanity>damn</profanity> kid";
+```
+
+Each deserialized substring exposes three properties :
+
+* `IsProfanity` : `true` for any span marked with a profanity tag. **This is the definitive signal to check when deciding whether to censor.**
+* `ProfanityLevel` : the severity, one of `Mild`, `Strong` or `Severe`. It can be `null` (see below), which does *not* mean the span isn't profanity- always rely on `IsProfanity` for that.
+* `Clean` : the text to display in place of the profanity.
+
+Both tag attributes are optional :
+
+```c#
+//an explicit level and a clean alternative to display instead of the word
+var text = "That <profanity level=severe clean=\"gosh darn\">goddamn</profanity> kid";
+```
+
+When `level` is omitted, it defaults to `DmlOptions.DefaultProfanityLevel` (`Strong` out of the box.) A valid level is `mild`, `strong` or `severe` (case-insensitive) ; anything else throws.
+
+When `clean` is omitted, what happens depends on `DmlOptions.CleanFallback` :
+
+* `DoNothing` (the default) : `Clean` is left `null`. DML invents nothing and it's entirely up to you what to show, in keeping with its "only a spec" philosophy.
+* `Grawlix` : a length-matched string of random-looking symbols (ex: `#$@!` for `damn`.) It is **deterministic**- the same word always produces the same grawlix- so deserialization stays repeatable. Whitespace is preserved so word boundaries survive.
+* `Asterisks` : a length-matched string of asterisks (ex: `****`), whitespace preserved.
+
+Like every other tag, profanity is independent from the rest, so the same span can be profanity *and* be colored, highlighted or styled. Nested profanity tags follow the usual inner-takes-precedence rule.
+
+You can build these strings with the `Profanity` extension methods :
+
+```c#
+var text = "damn".Profanity();                                  //<profanity>damn</profanity>
+var text = "damn".Profanity(ProfanityLevel.Severe);             //<profanity level=severe>damn</profanity>
+var text = "goddamn".Profanity(ProfanityLevel.Mild, "gosh darn"); //<profanity level=mild clean="gosh darn">goddamn</profanity>
+```
+
+> **A note on philosophy :** DML is *only a spec*- it hands values back untouched and never invents content. That's why `CleanFallback` defaults to `DoNothing` : out of the box an author-provided `clean` is honoured verbatim and nothing else is generated. The `Grawlix`/`Asterisks` fallbacks are an *opt-in* convenience for when you'd rather DML produce a mask for you.
+
+## Configuration
+
+Some tags are influenced by `DmlOptions`. You never need to configure anything- the defaults below apply out of the box :
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `CleanFallback` | `DoNothing` | What `Clean` is filled with when a profanity tag omits its `clean` attribute. `DoNothing` leaves it `null` (DML invents nothing) ; `Grawlix` and `Asterisks` produce a length-matched mask. |
+| `DefaultProfanityLevel` | `Strong` | The level assigned to a profanity tag that omits its `level` attribute. Set to `null` if you treat all profanity equally and don't want a level assigned. |
+
+The easiest way to change them is to bind them from the `Dml` section of your `appsettings.json` using [AutoConfig](https://github.com/Moreault/AutoConfig) :
+
+```json
+{
+    "Dml": {
+        "cleanFallback": "Asterisks",
+        "defaultProfanityLevel": "Mild"
+    }
+}
+```
+
+```c#
+services.AddDml();
+services.AddAutoConfig(configuration);
+```
+
+Alternatively, configure them in code :
+
+```c#
+services.AddDml(new DmlOptions
+{
+    CleanFallback = CleanFallback.Asterisks,
+    DefaultProfanityLevel = ProfanityLevel.Mild
+});
+```
 
 ## About DML
 

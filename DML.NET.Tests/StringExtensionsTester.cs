@@ -42,6 +42,37 @@ public class StringExtensionsTester
     }
 
     [TestClass]
+    public class Color_Name : Tester
+    {
+        [TestMethod]
+        public void WhenNameIsProvided_SurroundStringWithColorAndName()
+        {
+            //Arrange
+            var value = Dummy.Create<string>();
+            var name = Dummy.Create<string>();
+
+            //Act
+            var result = value.Color(name);
+
+            //Assert
+            result.Should().Be($"<color={name}>{value}</color>");
+        }
+
+        [TestMethod]
+        public void WhenNameIsNullOrBlank_Throw()
+        {
+            //Arrange
+            var value = Dummy.Create<string>();
+
+            //Act
+            var action = () => value.Color(" ");
+
+            //Assert
+            action.Should().Throw<ArgumentException>().WithParameterName("name");
+        }
+    }
+
+    [TestClass]
     public class Highlight_Rbg : Tester
     {
         [TestMethod]
@@ -76,6 +107,149 @@ public class StringExtensionsTester
 
             //Assert
             result.Should().Be($"<highlight red={color.Red} green={color.Green} blue={color.Blue} alpha={color.Alpha}>{value}</highlight>");
+        }
+    }
+
+    [TestClass]
+    public class Highlight_Name : Tester
+    {
+        [TestMethod]
+        public void WhenNameIsProvided_SurroundStringWithHighlightAndName()
+        {
+            //Arrange
+            var value = Dummy.Create<string>();
+            var name = Dummy.Create<string>();
+
+            //Act
+            var result = value.Highlight(name);
+
+            //Assert
+            result.Should().Be($"<highlight={name}>{value}</highlight>");
+        }
+
+        [TestMethod]
+        public void WhenNameIsNullOrBlank_Throw()
+        {
+            //Arrange
+            var value = Dummy.Create<string>();
+
+            //Act
+            var action = () => value.Highlight(" ");
+
+            //Assert
+            action.Should().Throw<ArgumentException>().WithParameterName("name");
+        }
+    }
+
+    [TestClass]
+    public class Keyword_NoId : Tester
+    {
+        [TestMethod]
+        public void Always_SurroundStringWithKeyword()
+        {
+            //Arrange
+            var value = Dummy.Create<string>();
+
+            //Act
+            var result = value.Keyword();
+
+            //Assert
+            result.Should().Be($"<keyword>{value}</keyword>");
+        }
+    }
+
+    [TestClass]
+    public class Keyword_WithId : Tester
+    {
+        [TestMethod]
+        public void WhenIdIsProvided_SurroundStringWithKeywordAndId()
+        {
+            //Arrange
+            var value = Dummy.Create<string>();
+            var id = Dummy.Create<string>();
+
+            //Act
+            var result = value.Keyword(id);
+
+            //Assert
+            result.Should().Be($"<keyword={id}>{value}</keyword>");
+        }
+
+        [TestMethod]
+        public void WhenIdIsNullOrBlank_FallBackToIdLessKeyword()
+        {
+            //Arrange
+            var value = Dummy.Create<string>();
+
+            //Act
+            var result = value.Keyword(" ");
+
+            //Assert
+            result.Should().Be($"<keyword>{value}</keyword>");
+        }
+    }
+
+    [TestClass]
+    public class Profanity_NoArgs : Tester
+    {
+        [TestMethod]
+        public void Always_SurroundStringWithProfanity()
+        {
+            //Arrange
+            var value = Dummy.Create<string>();
+
+            //Act
+            var result = value.Profanity();
+
+            //Assert
+            result.Should().Be($"<profanity>{value}</profanity>");
+        }
+    }
+
+    [TestClass]
+    public class Profanity_Level : Tester
+    {
+        [TestMethod]
+        public void Always_SurroundStringWithProfanityAndLowercaseLevel()
+        {
+            //Arrange
+            var value = Dummy.Create<string>();
+
+            //Act
+            var result = value.Profanity(ProfanityLevel.Severe);
+
+            //Assert
+            result.Should().Be($"<profanity level=severe>{value}</profanity>");
+        }
+    }
+
+    [TestClass]
+    public class Profanity_LevelAndClean : Tester
+    {
+        [TestMethod]
+        public void WhenCleanIsProvided_SurroundStringWithProfanityLevelAndClean()
+        {
+            //Arrange
+            var value = Dummy.Create<string>();
+
+            //Act
+            var result = value.Profanity(ProfanityLevel.Mild, "gosh darn");
+
+            //Assert
+            result.Should().Be($"<profanity level=mild clean=\"gosh darn\">{value}</profanity>");
+        }
+
+        [TestMethod]
+        public void WhenCleanIsNullOrBlank_FallBackToLevelOnlyProfanity()
+        {
+            //Arrange
+            var value = Dummy.Create<string>();
+
+            //Act
+            var result = value.Profanity(ProfanityLevel.Mild, " ");
+
+            //Assert
+            result.Should().Be($"<profanity level=mild>{value}</profanity>");
         }
     }
 

@@ -6,6 +6,7 @@ public abstract class DmlConverterTesterBase : Tester<DmlConverter>
     {
         base.InitializeTest();
         GetMock<IDmlTextStyleConverter>().Setup(x => x.Convert(It.IsAny<MetaString>())).Returns(new List<TextStyle>());
+        GetMock<IDmlProfanityTagConverter>().Setup(x => x.Convert(It.IsAny<MarkupTag>(), It.IsAny<string>())).Returns(new DmlProfanity());
     }
 }
 
@@ -32,7 +33,7 @@ public class DmlConverterTest
         public void WhenOneElementIsNull_Throw()
         {
             //Arrange
-            var metaStrings = new List<MetaString>(new[] { null!, Dummy.Create<MetaString>() });
+            var metaStrings = new List<MetaString>([null!, Dummy.Create<MetaString>()]);
 
             //Act
             Action action = () => Instance.Convert(metaStrings);
@@ -84,7 +85,7 @@ public class DmlConverterTest
             }).CreateMany());
 
             var expectedColor = Dummy.Create<Color>();
-            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(new MarkupTag { Name = DmlTags.Color, Value = "Second", Kind = TagKind.Opening })).Returns(expectedColor);
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(new MarkupTag { Name = DmlTags.Color, Value = "Second", Kind = TagKind.Opening })).Returns(new DmlColor { Color = expectedColor });
 
             //Act
             var result = Instance.Convert(metaStrings);
@@ -94,7 +95,7 @@ public class DmlConverterTest
             {
                 Text = x.Text,
                 Color = expectedColor
-            }));
+            }).ToDmlString());
         }
 
         [TestMethod]
@@ -108,7 +109,7 @@ public class DmlConverterTest
             }).CreateMany());
 
             var expectedHighlight = Dummy.Create<Color>();
-            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(new MarkupTag { Name = DmlTags.Highlight, Value = "Second", Kind = TagKind.Opening })).Returns(expectedHighlight);
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(new MarkupTag { Name = DmlTags.Highlight, Value = "Second", Kind = TagKind.Opening })).Returns(new DmlColor { Color = expectedHighlight });
 
             //Act
             var result = Instance.Convert(metaStrings);
@@ -118,7 +119,7 @@ public class DmlConverterTest
             {
                 Text = x.Text,
                 Highlight = expectedHighlight
-            }));
+            }).ToDmlString());
         }
 
         [TestMethod]
@@ -154,9 +155,9 @@ public class DmlConverterTest
             });
 
             var colors = Dummy.Create<List<Color>>();
-            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaStrings[0].Tags.Single())).Returns(colors[0]);
-            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaStrings[1].Tags.Single())).Returns(colors[1]);
-            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaStrings[2].Tags.Single())).Returns(colors[2]);
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaStrings[0].Tags.Single())).Returns(new DmlColor { Color = colors[0] });
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaStrings[1].Tags.Single())).Returns(new DmlColor { Color = colors[1] });
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaStrings[2].Tags.Single())).Returns(new DmlColor { Color = colors[2] });
 
             //Act
             var result = Instance.Convert(metaStrings);
@@ -213,9 +214,9 @@ public class DmlConverterTest
             });
 
             var highlights = Dummy.Create<List<Color>>();
-            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaStrings[0].Tags.Single())).Returns(highlights[0]);
-            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaStrings[1].Tags.Single())).Returns(highlights[1]);
-            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaStrings[2].Tags.Single())).Returns(highlights[2]);
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaStrings[0].Tags.Single())).Returns(new DmlColor { Color = highlights[0] });
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaStrings[1].Tags.Single())).Returns(new DmlColor { Color = highlights[1] });
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaStrings[2].Tags.Single())).Returns(new DmlColor { Color = highlights[2] });
 
             //Act
             var result = Instance.Convert(metaStrings);
@@ -303,7 +304,7 @@ public class DmlConverterTest
             };
 
             var expectedColor = Dummy.Create<Color>();
-            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(new MarkupTag { Name = DmlTags.Color, Value = "Second", Kind = TagKind.Opening })).Returns(expectedColor);
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(new MarkupTag { Name = DmlTags.Color, Value = "Second", Kind = TagKind.Opening })).Returns(new DmlColor { Color = expectedColor });
 
             //Act
             var result = Instance.Convert(metaString);
@@ -330,7 +331,7 @@ public class DmlConverterTest
             };
 
             var color = Dummy.Create<Color>();
-            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaString.Tags.Single())).Returns(color);
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(metaString.Tags.Single())).Returns(new DmlColor { Color = color });
 
             //Act
             var result = Instance.Convert(metaString);
@@ -340,6 +341,56 @@ public class DmlConverterTest
             {
                 Text = metaString.Text,
                 Color = color
+            });
+        }
+
+        [TestMethod]
+        public void WhenColorTagIsNamedColor_SetColorName()
+        {
+            //Arrange
+            var colorTag = Dummy.Build<MarkupTag>().With(x => x.Name, DmlTags.Color).Create();
+            var metaString = new MetaString
+            {
+                Text = Dummy.Create<string>(),
+                Tags = new List<MarkupTag> { colorTag }
+            };
+
+            var name = Dummy.Create<string>();
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(colorTag)).Returns(new DmlColor { Name = name });
+
+            //Act
+            var result = Instance.Convert(metaString);
+
+            //Assert
+            result.Should().BeEquivalentTo(new DmlSubstring
+            {
+                Text = metaString.Text,
+                ColorName = name
+            });
+        }
+
+        [TestMethod]
+        public void WhenHighlightTagIsNamedColor_SetHighlightName()
+        {
+            //Arrange
+            var highlightTag = Dummy.Build<MarkupTag>().With(x => x.Name, DmlTags.Highlight).Create();
+            var metaString = new MetaString
+            {
+                Text = Dummy.Create<string>(),
+                Tags = new List<MarkupTag> { highlightTag }
+            };
+
+            var name = Dummy.Create<string>();
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(highlightTag)).Returns(new DmlColor { Name = name });
+
+            //Act
+            var result = Instance.Convert(metaString);
+
+            //Assert
+            result.Should().BeEquivalentTo(new DmlSubstring
+            {
+                Text = metaString.Text,
+                HighlightName = name
             });
         }
 
@@ -360,6 +411,192 @@ public class DmlConverterTest
             {
                 Text = metaString.Text,
                 Styles = styles
+            });
+        }
+
+        [TestMethod]
+        public void WhenThereIsNoKeywordTag_KeywordIsNull()
+        {
+            //Arrange
+            var metaString = Dummy.Build<MetaString>().Omit(x => x.Tags).Create();
+
+            //Act
+            var result = Instance.Convert(metaString);
+
+            //Assert
+            result.Keyword.Should().BeNull();
+        }
+
+        [TestMethod]
+        public void WhenKeywordTagHasId_UseId()
+        {
+            //Arrange
+            var id = Dummy.Create<string>();
+            var metaString = new MetaString
+            {
+                Text = Dummy.Create<string>(),
+                Tags = new List<MarkupTag>
+                {
+                    new() { Name = DmlTags.Keyword, Value = id, Kind = TagKind.Opening }
+                }
+            };
+
+            //Act
+            var result = Instance.Convert(metaString);
+
+            //Assert
+            result.Should().BeEquivalentTo(new DmlSubstring
+            {
+                Text = metaString.Text,
+                Keyword = id
+            });
+        }
+
+        [TestMethod]
+        public void WhenKeywordTagHasNoId_DefaultIdToText()
+        {
+            //Arrange
+            var metaString = new MetaString
+            {
+                Text = Dummy.Create<string>(),
+                Tags = new List<MarkupTag>
+                {
+                    new() { Name = DmlTags.Keyword, Kind = TagKind.Opening }
+                }
+            };
+
+            //Act
+            var result = Instance.Convert(metaString);
+
+            //Assert
+            result.Should().BeEquivalentTo(new DmlSubstring
+            {
+                Text = metaString.Text,
+                Keyword = metaString.Text
+            });
+        }
+
+        [TestMethod]
+        public void WhenKeywordTagNestedInsideAnotherKeywordTag_UseLastKeywordTag()
+        {
+            //Arrange
+            var metaString = new MetaString
+            {
+                Text = Dummy.Create<string>(),
+                Tags = new List<MarkupTag>
+                {
+                    new() { Name = DmlTags.Keyword, Value = "First", Kind = TagKind.Opening },
+                    new() { Name = DmlTags.Keyword, Value = "Second", Kind = TagKind.Opening },
+                }
+            };
+
+            //Act
+            var result = Instance.Convert(metaString);
+
+            //Assert
+            result.Should().BeEquivalentTo(new DmlSubstring
+            {
+                Text = metaString.Text,
+                Keyword = "Second"
+            });
+        }
+
+        [TestMethod]
+        public void WhenMetaStringHasBothKeywordAndColor_SetBoth()
+        {
+            //Arrange
+            var id = Dummy.Create<string>();
+            var colorTag = Dummy.Build<MarkupTag>().With(x => x.Name, DmlTags.Color).Create();
+            var metaString = new MetaString
+            {
+                Text = Dummy.Create<string>(),
+                Tags = new List<MarkupTag>
+                {
+                    colorTag,
+                    new() { Name = DmlTags.Keyword, Value = id, Kind = TagKind.Opening }
+                }
+            };
+
+            var color = Dummy.Create<Color>();
+            GetMock<IDmlColorTagConverter>().Setup(x => x.Convert(colorTag)).Returns(new DmlColor { Color = color });
+
+            //Act
+            var result = Instance.Convert(metaString);
+
+            //Assert
+            result.Should().BeEquivalentTo(new DmlSubstring
+            {
+                Text = metaString.Text,
+                Color = color,
+                Keyword = id
+            });
+        }
+
+        [TestMethod]
+        public void WhenThereIsNoProfanityTag_IsNotProfanity()
+        {
+            //Arrange
+            var metaString = Dummy.Build<MetaString>().Omit(x => x.Tags).Create();
+
+            //Act
+            var result = Instance.Convert(metaString);
+
+            //Assert
+            result.Should().BeEquivalentTo(new DmlSubstring { Text = metaString.Text });
+        }
+
+        [TestMethod]
+        public void WhenThereIsProfanityTag_DelegateToConverterAndSetProperties()
+        {
+            //Arrange
+            var profanityTag = new MarkupTag { Name = DmlTags.Profanity, Kind = TagKind.Opening };
+            var metaString = new MetaString
+            {
+                Text = Dummy.Create<string>(),
+                Tags = new List<MarkupTag> { profanityTag }
+            };
+
+            var profanity = Dummy.Create<DmlProfanity>();
+            GetMock<IDmlProfanityTagConverter>().Setup(x => x.Convert(profanityTag, metaString.Text)).Returns(profanity);
+
+            //Act
+            var result = Instance.Convert(metaString);
+
+            //Assert
+            result.Should().BeEquivalentTo(new DmlSubstring
+            {
+                Text = metaString.Text,
+                IsProfanity = true,
+                ProfanityLevel = profanity.Level,
+                Clean = profanity.Clean
+            });
+        }
+
+        [TestMethod]
+        public void WhenProfanityTagNestedInsideAnotherProfanityTag_UseLastProfanityTag()
+        {
+            //Arrange
+            var first = new MarkupTag { Name = DmlTags.Profanity, Value = "First", Kind = TagKind.Opening };
+            var second = new MarkupTag { Name = DmlTags.Profanity, Value = "Second", Kind = TagKind.Opening };
+            var metaString = new MetaString
+            {
+                Text = Dummy.Create<string>(),
+                Tags = new List<MarkupTag> { first, second }
+            };
+
+            var profanity = Dummy.Create<DmlProfanity>();
+            GetMock<IDmlProfanityTagConverter>().Setup(x => x.Convert(second, metaString.Text)).Returns(profanity);
+
+            //Act
+            var result = Instance.Convert(metaString);
+
+            //Assert
+            result.Should().BeEquivalentTo(new DmlSubstring
+            {
+                Text = metaString.Text,
+                IsProfanity = true,
+                ProfanityLevel = profanity.Level,
+                Clean = profanity.Clean
             });
         }
     }

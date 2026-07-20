@@ -104,4 +104,7 @@
 	<data name="CannotConvertBecauseTagUnsupported" xml:space="preserve">
 		<value>Impossible de convertir la balise en couleur : son nom doit être '&lt;{0}&gt;' ou '&lt;{1}&gt;' mais il était '&lt;{2}&gt;'</value>
 	</data>
+	<data name="CannotConvertBecauseInvalidProfanityLevel" xml:space="preserve">
+		<value>Impossible de convertir la balise en profanité : '{0}' n'est pas un niveau de profanité valide (attendu 'mild', 'strong' ou 'severe'.)</value>
+	</data>
 </root>

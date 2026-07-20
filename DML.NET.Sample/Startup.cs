@@ -1,40 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using DML.NET.Sample.Resources;
+﻿using DML.NET.Sample.Resources;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using ToolBX.DML.NET;
 
-namespace DML.NET.Sample
+namespace DML.NET.Sample;
+
+public class Startup : ConsoleStartup
 {
-    public class Startup : ConsoleStartup
+    //Serialize enums (ex: ProfanityLevel) by their name rather than their numeric value, which is what a consumer
+    //typically wants to see and work with.
+    private static readonly JsonSerializerOptions JsonOptions = new()
     {
-        public Startup(IConfiguration configuration) : base(configuration)
-        {
-        }
+        WriteIndented = true,
+        Converters = { new JsonStringEnumConverter() }
+    };
 
-        public override void Run(IServiceProvider serviceProvider)
-        {
-            var dmlSerializer = serviceProvider.GetRequiredService<IDmlSerializer>();
+    public Startup(IConfiguration configuration) : base(configuration)
+    {
+    }
 
-            while(true)
+    public override void Run(IServiceProvider serviceProvider)
+    {
+        var dmlSerializer = serviceProvider.GetRequiredService<IDmlSerializer>();
+
+        while(true)
+        {
+            Console.WriteLine(Messages.EnterText);
+            try
             {
-                Console.WriteLine(Messages.EnterText);
-                try
-                {
-                    var line = Console.ReadLine();
-                    var dml = dmlSerializer.Deserialize(line);
-                    Console.WriteLine(JsonConvert.SerializeObject(dml, Formatting.Indented));
-                }
-                catch (Exception exception)
-                {
-                    Console.WriteLine(Messages.Error, exception.Message);
-                }
+                var line = Console.ReadLine();
+                var dml = dmlSerializer.Deserialize(line);
+                Console.WriteLine(JsonSerializer.Serialize(dml, JsonOptions));
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(Messages.Error, exception.Message);
             }
         }
     }

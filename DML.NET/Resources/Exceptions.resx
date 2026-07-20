@@ -104,4 +104,7 @@
 	<data name="CannotConvertBecauseTagUnsupported" xml:space="preserve">
 		<value>Can't convert tag to color : its name must be '&lt;{0}&gt;' or &lt;{1}&gt; but it was '&lt;{2}&gt;'</value>
 	</data>
+	<data name="CannotConvertBecauseInvalidProfanityLevel" xml:space="preserve">
+		<value>Can't convert tag to profanity : '{0}' is not a valid profanity level (expected 'mild', 'strong' or 'severe'.)</value>
+	</data>
 </root>

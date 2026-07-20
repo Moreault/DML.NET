@@ -1,6 +1,6 @@
 ﻿namespace ToolBX.DML.NET;
 
-public class DmlString : IReadOnlyList<DmlSubstringEntry>, IEquatable<DmlString>
+public sealed class DmlString : IReadOnlyList<DmlSubstringEntry>, IEquatable<DmlString>
 {
     private readonly IReadOnlyList<DmlSubstringEntry> _items;
 
@@ -43,45 +43,36 @@ public class DmlString : IReadOnlyList<DmlSubstringEntry>, IEquatable<DmlString>
         var start = GetDmlIndex(startingIndex);
         var end = GetDmlIndex(startingIndex + length);
 
-        var newstrings = new List<DmlSubstring>();
+        var newStrings = new List<DmlSubstring>();
 
         if (start.Outer == end.Outer)
+        {
+            DmlSubstring only = _items[start.Outer];
             return new List<DmlSubstring>
             {
-                new()
-                {
-                    Text = _items[start.Outer].Text.Substring(start.Inner, end.Inner - start.Inner),
-                    Color = _items[start.Outer].Color
-                }
+                only with { Text = only.Text.Substring(start.Inner, end.Inner - start.Inner) }
             }.ToDmlString();
+        }
 
         for (var i = start.Outer; i <= end.Outer; i++)
         {
-            var item = _items[i];
+            DmlSubstring item = _items[i];
 
             if (i > start.Outer && i < end.Outer)
             {
-                newstrings.Add(item);
+                newStrings.Add(item);
             }
             else if (i == start.Outer)
             {
-                newstrings.Add(new DmlSubstring
-                {
-                    Text = item.Text.Substring(start.Inner),
-                    Color = item.Color
-                });
+                newStrings.Add(item with { Text = item.Text[start.Inner..] });
             }
             else if (i == end.Outer)
             {
-                newstrings.Add(new DmlSubstring
-                {
-                    Text = item.Text.Substring(0, end.Inner),
-                    Color = item.Color
-                });
+                newStrings.Add(item with { Text = item.Text[..end.Inner] });
             }
         }
 
-        return newstrings.ToDmlString();
+        return newStrings.ToDmlString();
     }
 
     private DmlStringIndex GetDmlIndex(int fullStringIndex)
@@ -112,7 +103,7 @@ public class DmlString : IReadOnlyList<DmlSubstringEntry>, IEquatable<DmlString>
     {
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != this.GetType()) return false;
+        if (obj.GetType() != GetType()) return false;
         return Equals((DmlString)obj);
     }
 
@@ -121,7 +112,7 @@ public class DmlString : IReadOnlyList<DmlSubstringEntry>, IEquatable<DmlString>
         return (_items.GetHashCode());
     }
 
-    public static bool operator ==(DmlString? a, DmlString? b) => a is null && b is null || a is not null && a.Equals(b);
+    public static bool operator ==(DmlString? a, DmlString? b) => (a is null && b is null) || (a is not null && a.Equals(b));
 
     public static bool operator !=(DmlString? a, DmlString? b) => !(a == b);
 

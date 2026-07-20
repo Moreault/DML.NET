@@ -7,15 +7,17 @@ public interface IDmlConverter
 }
 
 [AutoInject(ServiceLifetime.Singleton)]
-public class DmlConverter : IDmlConverter
+public sealed class DmlConverter : IDmlConverter
 {
     private readonly IDmlColorTagConverter _dmlColorTagConverter;
     private readonly IDmlTextStyleConverter _dmlTextStyleConverter;
+    private readonly IDmlProfanityTagConverter _dmlProfanityTagConverter;
 
-    public DmlConverter(IDmlColorTagConverter dmlColorTagConverter, IDmlTextStyleConverter dmlTextStyleConverter)
+    public DmlConverter(IDmlColorTagConverter dmlColorTagConverter, IDmlTextStyleConverter dmlTextStyleConverter, IDmlProfanityTagConverter dmlProfanityTagConverter)
     {
         _dmlColorTagConverter = dmlColorTagConverter;
         _dmlTextStyleConverter = dmlTextStyleConverter;
+        _dmlProfanityTagConverter = dmlProfanityTagConverter;
     }
 
     public DmlString Convert(IReadOnlyList<MetaString> metaStrings)
@@ -30,12 +32,24 @@ public class DmlConverter : IDmlConverter
 
         var colorTag = metaString.Tags.LastOrDefault(x => string.Equals(x.Name, DmlTags.Color, StringComparison.InvariantCultureIgnoreCase));
         var highlightTag = metaString.Tags.LastOrDefault(x => string.Equals(x.Name, DmlTags.Highlight, StringComparison.InvariantCultureIgnoreCase));
+        var keywordTag = metaString.Tags.LastOrDefault(x => string.Equals(x.Name, DmlTags.Keyword, StringComparison.InvariantCultureIgnoreCase));
+        var profanityTag = metaString.Tags.LastOrDefault(x => string.Equals(x.Name, DmlTags.Profanity, StringComparison.InvariantCultureIgnoreCase));
+
+        var color = colorTag == null ? null : _dmlColorTagConverter.Convert(colorTag);
+        var highlight = highlightTag == null ? null : _dmlColorTagConverter.Convert(highlightTag);
+        var profanity = profanityTag == null ? null : _dmlProfanityTagConverter.Convert(profanityTag, metaString.Text);
 
         return new DmlSubstring
         {
             Text = metaString.Text,
-            Color = colorTag == null ? null : _dmlColorTagConverter.Convert(colorTag),
-            Highlight = highlightTag == null ? null : _dmlColorTagConverter.Convert(highlightTag),
+            Color = color?.Color,
+            ColorName = color?.Name,
+            Highlight = highlight?.Color,
+            HighlightName = highlight?.Name,
+            Keyword = keywordTag == null ? null : string.IsNullOrWhiteSpace(keywordTag.Value) ? metaString.Text : keywordTag.Value,
+            IsProfanity = profanityTag != null,
+            ProfanityLevel = profanity?.Level,
+            Clean = profanity?.Clean,
             Styles = _dmlTextStyleConverter.Convert(metaString)
         };
     }

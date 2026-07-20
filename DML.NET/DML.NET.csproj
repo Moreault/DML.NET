@@ -1,10 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>3.0.0</Version>
+		<IsAotCompatible>true</IsAotCompatible>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<!-- DML.NET 4.0.0 intentionally depends on prerelease ToolBX packages during the 4.0.0 rollout.
+		     NU5104 (stable package with prerelease dependency) is the only unavoidable warning here and
+		     is suppressed to match the rest of the ToolBX ecosystem (e.g. EasyTypeParsing). -->
+		<NoWarn>$(NoWarn);NU5104</NoWarn>
+		<Version>4.0.0</Version>
 		<RootNamespace>ToolBX.$(AssemblyName)</RootNamespace>
 		<PackageId>ToolBX.$(AssemblyName)</PackageId>
 		<Product>ToolBX.$(AssemblyName)</Product>
@@ -30,9 +36,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="ToolBX.AwesomeMarkup" Version="3.0.0" />
-		<PackageReference Include="ToolBX.ColorFull" Version="3.0.0" />
-		<PackageReference Include="ToolBX.EasyTypeParsing" Version="3.0.0" />
+		<PackageReference Include="ToolBX.AutoConfig" Version="4.0.0" />
+		<PackageReference Include="ToolBX.AutoInject" Version="4.0.0" />
+		<PackageReference Include="ToolBX.AwesomeMarkup" Version="4.0.0" />
+		<PackageReference Include="ToolBX.ColorFull" Version="4.0.0" />
+		<PackageReference Include="ToolBX.EasyTypeParsing" Version="4.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
