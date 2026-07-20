@@ -40,7 +40,7 @@ public void YourMethod()
 }
 ```
 
-You can always assume that a null or empty value for properties such as Color, Styles or Keyword mean that this part of text should use default values (or, in the case of Keyword, that the text isn't a keyword at all.)
+You can always assume that null or empty values for properties such as Color, Styles or Keyword mean that this part of text should use default values (or, in the case of Keyword, that the text isn't a keyword at all.)
 
 ### Sample project
 You can use the sample project provided in the solution to test out your use cases with DML to see if they apply correctly. 
