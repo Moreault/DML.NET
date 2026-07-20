@@ -10,10 +10,10 @@ public sealed record DmlOptions
 {
     /// <summary>
     /// What <see cref="DmlSubstring.Clean"/> is filled with when a <c>&lt;profanity&gt;</c> tag has no explicit
-    /// <c>clean</c> attribute. Defaults to <see cref="NET.CleanFallback.DoNothing"/> : out of the box DML invents
-    /// nothing and leaves the censoring to you, in keeping with its "only a spec" philosophy. Set it to
-    /// <see cref="NET.CleanFallback.Grawlix"/> or <see cref="NET.CleanFallback.Asterisks"/> to opt into an
-    /// auto-generated mask.
+/// <c>clean</c> attribute. Defaults to <see cref="CleanFallback.DoNothing"/> : out of the box DML invents
+/// nothing and leaves the censoring to you, in keeping with its "only a spec" philosophy. Set it to
+/// <see cref="CleanFallback.Grawlix"/> or <see cref="CleanFallback.Asterisks"/> to opt into an
+/// auto-generated mask.
     /// </summary>
     public CleanFallback CleanFallback { get; init; } = CleanFallback.DoNothing;
 
